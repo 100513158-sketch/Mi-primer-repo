@@ -45,7 +45,7 @@ $$
 θ_{10km}=\arctan\left(\frac{28.5}{10000}\right)\approx 0.16^\circ
 $$
 
-Estos resultados muestran que, incluso en 1 km, el ángulo de elevación es bajo y en 10 km es prácticamente rasante al horizonte. Por tanto, la parte más crítica del patrón del gateway es la zona de elevaciones bajas. Si la antena presenta depresión de ganancia cerca del horizonte, el sensor más lejano será el primero en degradarse. Este análisis justifica verificar con detalle el patrón de elevación del gateway y, si fuese necesario, aumentar altura de instalación o ajustar inclinación mecánica para mejorar cobertura en el extremo del trazado.
+Por tanto, la parte más crítica del patrón del gateway es la zona de elevaciones bajas. Si la antena presenta depresión de ganancia cerca del horizonte, el sensor más lejano será el primero en degradarse. Este análisis justifica verificar con detalle el patrón de elevación del gateway y, si fuese necesario, aumentar altura de instalación o ajustar inclinación mecánica para mejorar cobertura en el extremo del trazado.
 
 ### 2.2 Criterios de aceptación numéricos para validación del sistema
 Con el fin de convertir la validación en un proceso objetivo y reproducible, se establecen los siguientes criterios de aceptación para simulación y prueba en campo:
@@ -87,22 +87,22 @@ Con el fin de convertir la validación en un proceso objetivo y reproducible, se
 La definición de umbrales numéricos evita decisiones subjetivas y permite defender técnicamente la viabilidad del sistema. Además, al exigir validación simultánea de patrón, enlace y métricas reales de recepción, se garantiza que el rendimiento simulado se traduzca en funcionamiento robusto sobre el trazado completo del gasoducto.
 
 ### 2.3 Resultados del barrido de optimización
-Con el script de barrido de altura e inclinación del gateway se obtiene una comparativa sistemática del margen de enlace sobre el trazado completo. En esta sección se deben insertar las figuras generadas y documentar el resultado de cada una.
+Con el script de barrido de altura e inclinación del gateway se obtiene una comparativa sistemática del margen de enlace sobre el trazado completo. En esta sección se insertan las figuras generadas y se documenta el resultado de cada una.
 
 Figura 17. Mapa de calor del peor margen de enlace [dB] en función de la inclinación del gateway [deg] y la altura del gateway [m], junto con la curva de margen vs distancia para la configuración óptima.
-Pegar aquí la figura: panel combinado con mapa de calor, curva de margen vs distancia y etiquetas de distancia (por ejemplo 0.5 km, 1 km, 5 km y 10 km).
+Insertar aquí la figura correspondiente: panel combinado con mapa de calor, curva de margen vs distancia y etiquetas de distancia (por ejemplo 0.5 km, 1 km, 5 km y 10 km).
 Conclusión breve: Esta figura permite identificar la combinación altura-inclinación que maximiza el margen mínimo de enlace y, además, visualizar de forma intuitiva cómo evoluciona la compatibilidad del radioenlace sensor-gateway a lo largo del trazado.
 
 Figura 18. Margen de enlace [dB] frente a distancia [km]: comparación entre configuración óptima del barrido y configuración de referencia (30 m, 0 deg).
-Pegar aquí la figura: curva de margen vs distancia (óptimo vs referencia) con líneas de umbral.
+Insertar aquí la figura correspondiente: curva de margen vs distancia (óptimo vs referencia) con líneas de umbral.
 Conclusión breve: La figura evidencia si la configuración optimizada mejora la compatibilidad del enlace en toda la línea y, en particular, en el extremo de 10 km, donde la exigencia de ganancia y polarización es mayor.
 
 Figura 19. Ganancia del gateway [dBi] en elevaciones bajas en función del ángulo de llegada [deg], para distintos valores de inclinación.
-Pegar aquí la figura: sensibilidad de ganancia en elevación baja para los tilt barridos.
+Insertar aquí la figura correspondiente: sensibilidad de ganancia en elevación baja para los tilt barridos.
 Conclusión breve: La respuesta angular confirma cómo pequeñas variaciones de inclinación alteran la compatibilidad angular del radioenlace, pudiendo mejorar o degradar la recepción de sensores lejanos.
 
 Figura 20. Mapa de calor del margen en el extremo lejano (10 km) [dB] en función de la inclinación [deg] y la altura [m] del gateway.
-Pegar aquí la figura: mapa de calor del margen en extremo lejano.
+Insertar aquí la figura correspondiente: mapa de calor del margen en extremo lejano.
 Conclusión breve: Esta figura focaliza la condición más crítica del sistema y valida si la configuración mantiene compatibilidad de antenas y margen suficiente en el caso de peor distancia.
 
 ### Conclusiones del apartado 2.3
@@ -135,18 +135,18 @@ $$
 M_{3dB}(d)=M_{0dB}(d)-3
 $$
 
-Implicaciones prácticas para la memoria:
+Implicaciones prácticas:
 
 - La configuración óptima de altura/inclinación no debería cambiar por este barrido de polarización (el desplazamiento es uniforme).
 - El margen en peor caso y el margen en el extremo de 10 km disminuyen 3 dB.
 - La condición de aceptación debe revalidarse con el umbral exigido (10 dB, 15 dB o 20 dB según criterio de diseño).
 
-Resultados comparativos con los valores obtenidos:
+Resultados comparativos obtenidos:
 - Caso $L_{pol}=0$ dB: margen peor caso = 27.41 dB; margen a 10 km = 27.41 dB.
 - Caso $L_{pol}=3$ dB (inferencia del modelo): margen peor caso = 24.41 dB; margen a 10 km = 24.41 dB.
 - Configuración óptima en ambos casos: altura de gateway = 35 m; tilt = 0 deg.
 
-Texto comparativo listo para pegar (con tus valores):
+Redacción comparativa propuesta:
 
 "Al comparar los casos $L_{pol}=0$ dB y $L_{pol}=3$ dB, se observa una degradación uniforme de 3 dB en el margen de enlace a lo largo de todo el trazado. La configuración óptima de altura e inclinación del gateway se mantiene, pero el margen en peor caso y en el extremo lejano disminuyen en la misma cuantía. En consecuencia, la compatibilidad de polarización entre monopolo (gateway) y patch (sensores) resulta crítica para preservar el cumplimiento de los criterios de aceptación del enlace." 
 
@@ -257,7 +257,7 @@ Para pegar este texto directamente en el documento final se recomienda:
 
 ## 10. Figuras a insertar (scripts de antena)
 
-En esta sección se indica exactamente dónde insertar cada figura de simulación. Solo debes copiar cada pie en Word, colocar la imagen correspondiente debajo y mantener la numeración.
+En esta sección se indica la ubicación de cada figura de simulación. Debajo de cada pie se inserta la imagen correspondiente y se mantiene la numeración establecida.
 
 ### 10.1 Figuras de script_monopolo
 
@@ -313,4 +313,3 @@ Conclusión breve: La corriente superficial valida el modo resonante esperado y 
 
 ### Conclusión del apartado 10
 La secuencia de Figuras 1 a 16 proporciona evidencia completa de geometría, adaptación y radiación para ambas soluciones de antena. Esta trazabilidad visual permite justificar de forma sólida la elección final del sistema radiante para monitoreo distribuido en gasoductos.
-
