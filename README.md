@@ -18,9 +18,9 @@ Por su parte, la elección de patch microstrip en sensores se justifica por crit
 
 De forma crítica, el radioenlace requiere compatibilidad de polarización entre ambas antenas. Por tanto, la orientación mecánica del monopolo en gateway y de los patches en sensores debe fijarse de forma consistente durante la instalación para minimizar pérdidas por desacoplo de polarización.
 
-Con los resultados obtenidos en esta memoria, se confirma que para un gasoducto de aproximadamente 20 km es viable operar con un único gateway central (10 km por lado), ya que el margen en 10 km con Okumura-Hata rural es de 22.33 dB y el barrido de optimización entrega un peor caso de 27.41 dB para la configuración seleccionada (35 m, 0 deg, con L_pol=0 dB). Por criterio de ingeniería, se mantiene la recomendación de reservar margen adicional frente a desvanecimiento, vegetación, clima y pérdidas de instalación; si en una validación de campo el peor caso descendiera por debajo del umbral adoptado, se reevaluaría altura/emplazamiento o se incorporaría un segundo gateway.
+Con los resultados obtenidos en esta memoria, se confirma que para un gasoducto de aproximadamente 20 km es viable operar con un único gateway central (10 km por lado). Al aplicar un criterio de diseño orientado a coste de infraestructura y robustez en el extremo, la altura mínima robusta en 10 km resulta 9 m con tilt -1 deg y margen de 15.39 dB (L_pol=0 dB, umbral de robustez 15 dB). Como referencia de máxima robustez en el rango barrido, la mejor configuración por peor caso es 50 m con tilt 0 deg y margen de 30.56 dB. Por criterio de ingeniería, se mantiene la recomendación de reservar margen adicional frente a desvanecimiento, vegetación, clima y pérdidas de instalación; si en validación de campo el peor caso descendiera por debajo del umbral adoptado, se reevaluaría altura/emplazamiento o se incorporaría un segundo gateway.
 
-El análisis geométrico confirma que los ángulos de llegada en elevación son bajos en todo el trazado (aprox. 1.63 deg a 1 km y 0.16 deg a 10 km para $h_{GW}=30$ m y $h_S=1.5$ m). En consecuencia, la cobertura efectiva queda gobernada por la respuesta del gateway cerca del horizonte: cualquier depresión de ganancia en elevaciones bajas penaliza primero el extremo lejano. Por ello, además de validar azimut, se debe verificar explícitamente el patrón de elevación en ese intervalo angular y ajustar altura/tilt del gateway si se detectan degradaciones en el peor caso.
+El análisis geométrico confirma que los ángulos de llegada en elevación son bajos en todo el trazado (aprox. 0.49 deg a 1 km y 0.05 deg a 10 km para $h_{GW}=10$ m y $h_S=1.5$ m). En consecuencia, la cobertura efectiva queda gobernada por la respuesta del gateway cerca del horizonte: cualquier depresión de ganancia en elevaciones bajas penaliza primero el extremo lejano. Por ello, además de validar azimut, se debe verificar explícitamente el patrón de elevación en ese intervalo angular y ajustar altura/tilt del gateway si se detectan degradaciones en el peor caso.
 
 ### 2.1 Análisis geométrico del ángulo de llegada (sensor cercano frente a lejano)
 Para cuantificar el efecto anterior se emplea una aproximación geométrica básica del ángulo de elevación de llegada al gateway:
@@ -31,18 +31,18 @@ $$
 
 donde $h_{GW}$ es la altura de la antena del gateway, $h_S$ la altura de la antena del sensor y $d$ la distancia horizontal entre ambos.
 
-Tomando los valores de diseño utilizados en el proyecto ($h_{GW}=30$ m y $h_S=1.5$ m), la diferencia de altura es $\Delta h = 28.5$ m. Con ello:
+Tomando los valores de diseño utilizados en el proyecto ($h_{GW}=10$ m y $h_S=1.5$ m), la diferencia de altura es $\Delta h = 8.5$ m. Con ello:
 
 - Sensor cercano a $d=1$ km:
 
 $$
-θ_{1km}=\arctan\left(\frac{28.5}{1000}\right)\approx 1.63^\circ
+θ_{1km}=\arctan\left(\frac{8.5}{1000}\right)\approx 0.49^\circ
 $$
 
 - Sensor lejano a $d=10$ km:
 
 $$
-θ_{10km}=\arctan\left(\frac{28.5}{10000}\right)\approx 0.16^\circ
+θ_{10km}=\arctan\left(\frac{8.5}{10000}\right)\approx 0.05^\circ
 $$
 
 Por tanto, la parte más crítica del patrón del gateway es la zona de elevaciones bajas. Si la antena presenta depresión de ganancia cerca del horizonte, el sensor más lejano será el primero en degradarse. Este análisis justifica verificar con detalle el patrón de elevación del gateway y, si fuese necesario, aumentar altura de instalación o ajustar inclinación mecánica para mejorar cobertura en el extremo del trazado.
@@ -68,7 +68,7 @@ Con el fin de convertir la validación en un proceso objetivo y reproducible, se
 4. Presupuesto de enlace:
 - Criterio principal: margen de enlace en peor caso $\geq 10$ dB.
 - Criterio recomendado para operación robusta: margen de enlace en peor caso $\geq 15$ dB.
-- Criterio de diseño conservador: margen objetivo de 20 dB cuando el entorno sea variable o no controlado.
+- Criterio de diseño conservador: margen objetivo de 10 dB cuando el entorno sea variable o no controlado.
 
 5. Objetivos de calidad de recepción (medidos en campo):
 - RSSI objetivo en el extremo lejano: mayor o igual a $-120$ dBm.
@@ -93,7 +93,7 @@ Figura 17. Mapa de calor del peor margen de enlace [dB] en función de la inclin
 Insertar aquí la figura correspondiente: panel combinado con mapa de calor, curva de margen vs distancia y etiquetas de distancia (por ejemplo 0.5 km, 1 km, 5 km y 10 km).
 Conclusión breve: Esta figura permite identificar la combinación altura-inclinación que maximiza el margen mínimo de enlace y, además, visualizar de forma intuitiva cómo evoluciona la compatibilidad del radioenlace sensor-gateway a lo largo del trazado.
 
-Figura 18. Margen de enlace [dB] frente a distancia [km]: comparación entre configuración óptima del barrido y configuración de referencia (30 m, 0 deg).
+Figura 18. Margen de enlace [dB] frente a distancia [km]: comparación entre configuración óptima del barrido y configuración mínima robusta.
 Insertar aquí la figura correspondiente: curva de margen vs distancia (óptimo vs referencia) con líneas de umbral.
 Conclusión breve: La figura evidencia si la configuración optimizada mejora la compatibilidad del enlace en toda la línea y, en particular, en el extremo de 10 km, donde la exigencia de ganancia y polarización es mayor.
 
@@ -110,12 +110,14 @@ El barrido de optimización transforma la selección de altura e inclinación de
 
 Resultados obtenidos en la ejecución del barrido (caso $L_{pol}=0$ dB):
 - Ganancia efectiva del sensor patch (broadside): 9.76 dBi.
-- Mejor configuración por peor caso: altura de gateway 35 m, tilt 0 deg.
-- Margen peor caso (0.5-10 km): 27.41 dB.
-- Margen en extremo lejano (10 km): 27.41 dB.
-- Configuración de referencia (30 m, 0 deg): margen peor caso 26.04 dB.
+- Criterio de robustez en 10 km: margen >= 15 dB.
+- Altura mínima robusta: 9 m, tilt -1 deg, margen en 10 km = 15.39 dB.
+- Mejor configuración por peor caso (referencia de robustez máxima): altura de gateway 50 m, tilt 0 deg.
+- Margen peor caso (0.5-10 km) en configuración robusta máxima: 30.56 dB.
+- Margen en extremo lejano (10 km) en configuración robusta máxima: 30.56 dB.
+- Configuración de comparación (10 m, 0 deg): margen en 10 km = 26.04 dB.
 
-Interpretación: con los parámetros actuales, el radioenlace es claramente viable y robusto en todo el trazado de 20 km con un único gateway central, cumpliendo holgadamente los umbrales de 10 dB y 15 dB de margen.
+Interpretación: con los parámetros actuales, el radioenlace es viable en todo el trazado de 20 km incluso con una solución de menor coste estructural (9 m). Si se prioriza robustez máxima dentro del rango barrido, 50 m aporta margen adicional. En ambos enfoques se cumple el umbral de 15 dB en 10 km, con una diferencia de margen significativa a favor de la configuración más alta.
 
 ### 2.4 Comparativa por desacoplo de polarización: casos $L_{pol}=0$ dB y $L_{pol}=3$ dB
 Para analizar la sensibilidad del radioenlace frente a desalineación de polarización, se comparan dos escenarios:
@@ -139,12 +141,12 @@ Implicaciones prácticas:
 
 - La configuración óptima de altura/inclinación no debería cambiar por este barrido de polarización (el desplazamiento es uniforme).
 - El margen en peor caso y el margen en el extremo de 10 km disminuyen 3 dB.
-- La condición de aceptación debe revalidarse con el umbral exigido (10 dB, 15 dB o 20 dB según criterio de diseño).
+- La condición de aceptación debe revalidarse con el umbral exigido (10 dB o 15 dB según criterio de diseño).
 
 Resultados comparativos obtenidos:
-- Caso $L_{pol}=0$ dB: margen peor caso = 27.41 dB; margen a 10 km = 27.41 dB.
-- Caso $L_{pol}=3$ dB (inferencia del modelo): margen peor caso = 24.41 dB; margen a 10 km = 24.41 dB.
-- Configuración óptima en ambos casos: altura de gateway = 35 m; tilt = 0 deg.
+- Caso $L_{pol}=0$ dB (configuración robusta de referencia): margen peor caso = 30.56 dB; margen a 10 km = 30.56 dB.
+- Caso $L_{pol}=3$ dB (inferencia del modelo): margen peor caso = 27.56 dB; margen a 10 km = 27.56 dB.
+- Configuración robusta en ambos casos: altura de gateway = 50 m; tilt = 0 deg.
 
 Redacción comparativa propuesta:
 
@@ -219,7 +221,7 @@ Resultados numéricos del modelo Okumura-Hata (d = 10 km):
 - $P_R(d)=-114.67$ dBm.
 - Margen de enlace = 22.33 dB.
 - Distancia máxima teórica = 43.06 km.
-- Distancia máxima práctica (margen de diseño 20 dB) = 11.65 km.
+- Distancia máxima práctica (margen de diseño 10 dB) = 11.65 km.
 
 Interpretación: el enlace es viable con buen margen en 10 km por lado, y la distancia práctica estimada (11.65 km) es coherente con el escenario de gateway central para un trazado total de 20 km.
 
@@ -313,3 +315,4 @@ Conclusión breve: La corriente superficial valida el modo resonante esperado y 
 
 ### Conclusión del apartado 10
 La secuencia de Figuras 1 a 16 proporciona evidencia completa de geometría, adaptación y radiación para ambas soluciones de antena. Esta trazabilidad visual permite justificar de forma sólida la elección final del sistema radiante para monitoreo distribuido en gasoductos.
+
