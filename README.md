@@ -18,7 +18,7 @@ Por su parte, la elección de patch microstrip en sensores se justifica por crit
 
 De forma crítica, el radioenlace requiere compatibilidad de polarización entre ambas antenas. Por tanto, la orientación mecánica del monopolo en gateway y de los patches en sensores debe fijarse de forma consistente durante la instalación para minimizar pérdidas por desacoplo de polarización.
 
-La lógica de decisión adoptada en esta memoria se estructura en dos barridos complementarios y luego una validación final. Primero se ejecuta un barrido conservador de canal con Okumura-Hata y ganancias fijas (script barrido_okhata_ganancias_fijas.m) para fijar una cota base de altura mínima. Segundo, se ejecuta el barrido electromagnético con antenas diseñadas y dependencia angular (script barrido_gateway_gasoducto.m) para validar el enlace con patrones reales y tilt. Con esta metodología, el barrido conservador arroja h_min,10 = 8 m y h_min,15 = 14 m en 10 km; el barrido con antenas diseñadas confirma viabilidad robusta y mejora de margen por ganancia efectiva y orientación. A efectos de ingeniería, se distingue explícitamente entre altura mínima funcional (10 dB) y altura mínima robusta (15 dB).
+La lógica de decisión adoptada en esta memoria se estructura en dos barridos complementarios y luego una validación final. Primero se ejecuta un barrido conservador de canal con Okumura-Hata y ganancias fijas (script barrido_okhata_ganancias_fijas.m) para fijar una cota base de altura mínima. Como validación intermedia, se ejecuta un segundo barrido con Okumura-Hata y ganancias reales dependientes del ángulo de elevación (script barrido_okhata_antenas_reales.m) para cuantificar el efecto de la respuesta angular de las antenas reales. Finalmente, se ejecuta el barrido electromagnético con antenas diseñadas, dependencia angular completa y optimización de tilt (script barrido_gateway_gasoducto.m) para validar el enlace con patrones reales, orientación y peor caso azimutal. Con esta metodología de tres etapas, el barrido conservador arroja h_min,10 = 8 m y h_min,15 = 14 m en 10 km; el barrido con ganancias reales proporciona validación intermedia con dependencia angular; y el barrido electromagnético confirma viabilidad robusta y mejora de margen por ganancia efectiva y orientación. A efectos de ingeniería, se distingue explícitamente entre altura mínima funcional (10 dB) y altura mínima robusta (15 dB).
 
 El análisis geométrico confirma que los ángulos de llegada en elevación son bajos en todo el trazado (aprox. 0.49 deg a 1 km y 0.05 deg a 10 km para $h_{GW}=10$ m y $h_S=1.5$ m). En consecuencia, la cobertura efectiva queda gobernada por la respuesta del gateway cerca del horizonte: cualquier depresión de ganancia en elevaciones bajas penaliza primero el extremo lejano. Por ello, además de validar azimut, se debe verificar explícitamente el patrón de elevación en ese intervalo angular y ajustar altura/tilt del gateway si se detectan degradaciones en el peor caso.
 
@@ -89,11 +89,12 @@ Con el fin de convertir la validación en un proceso objetivo y reproducible, se
 La definición de umbrales numéricos evita decisiones subjetivas y permite defender técnicamente la viabilidad del sistema. Además, al exigir validación simultánea de patrón, enlace y métricas reales de recepción, se garantiza que el rendimiento simulado se traduzca en funcionamiento robusto sobre el trazado completo del gasoducto.
 
 ### 2.3 Resultados del barrido de optimización
-En esta memoria se separan dos niveles de análisis:
-- Barrido A (conservador de canal): Okumura-Hata con ganancias fijas (script barrido_okhata_ganancias_fijas.m).
+En esta memoria se separan tres niveles de análisis:
+- Barrido A (conservador de propagación): Okumura-Hata con ganancias fijas (script barrido_okhata_ganancias_fijas.m).
+- Barrido A+ (conservador con antenas reales): Okumura-Hata con ganancias reales dependientes de ángulo de elevación (script barrido_okhata_antenas_reales.m).
 - Barrido B (electromagnético del sistema): Okumura-Hata + patrones reales de antena + tilt + peor caso azimutal (script barrido_gateway_gasoducto.m).
 
-Esta separación evita mezclar hipótesis y permite justificar de forma trazable la altura mínima funcional y robusta.
+Esta separación en tres niveles evita mezclar hipótesis y permite justificar de forma trazable la altura mínima funcional y robusta, proporcionando validación incremental desde el caso más conservador hasta el más optimizado.
 
 Figura 17. Mapa de calor del peor margen de enlace [dB] en función de la inclinación del gateway [deg] y la altura del gateway [m], junto con la curva de margen vs distancia para la configuración óptima.
 Insertar aquí la figura correspondiente: panel combinado con mapa de calor, curva de margen vs distancia y etiquetas de distancia (por ejemplo 0.5 km, 1 km, 5 km y 10 km).
@@ -119,11 +120,18 @@ Resultados del Barrido A (ganancias fijas, modelo conservador):
 - Umbral robusto (15 dB): altura mínima $h_{min,15}=14$ m.
 - En $h_{TX}=10$ m: margen en 10 km = 12.61 dB (cumple 10 dB, no cumple 15 dB).
 
+Resultados del Barrido A+ (ganancias reales de antena, modelo conservador con dependencia angular):
+- Umbral funcional (10 dB): altura mínima $h_{min,10}=6$ m (margen = 10.58 dB).
+- Umbral robusto (15 dB): altura mínima $h_{min,15}=10$ m (margen = 15.25 dB).
+- En $h_{TX}=10$ m: margen en 10 km = 15.25 dB (cumple 10 dB y cumple 15 dB).
+- Este barrido valida que el uso de ganancias reales dependientes del ángulo de elevación reduce significativamente la altura requerida (2 m menos para funcional, 4 m menos para robusto) respecto al modelo de ganancias fijas.
+
 Resultados del Barrido B (antenas diseñadas, caso $L_{pol}=0$ dB):
 - Ganancia efectiva del sensor patch (broadside): 9.76 dBi.
 - Viabilidad robusta del enlace confirmada en el extremo de 10 km para configuraciones del barrido.
-- Caso de comparación adoptado en memoria: $h_{GW}=10$ m, tilt 0 deg, margen en 10 km = 26.04 dB.
-- Referencia de robustez previa documentada: 9 m, tilt -1 deg, margen en 10 km = 15.39 dB.
+- Altura mínima robusta (criterio 15 dB a 10 km): $h_{GW}=9$ m, tilt = -1 deg, margen en 10 km = 15.39 dB.
+- Caso representativo robusto: $h_{GW}=10$ m, tilt = -1 deg, margen en 10 km = 16.33 dB.
+- Mejor configuración por peor caso: $h_{GW}=15$ m, tilt = -1 deg, margen peor caso = 19.91 dB (margen en 10 km = 19.91 dB).
 
 Definición explícita de altura mínima en el barrido:
 - Para cada altura barrida, se selecciona el tilt que maximiza el margen en 10 km.
@@ -136,6 +144,22 @@ Interpretación y criterio final de diseño:
 - Si se impone criterio robusto conservador (15 dB) con hipótesis de ganancias fijas, la altura recomendada es 14 m.
 - Si se adopta la validación electromagnética con antenas diseñadas y orientación controlada, 10 m resulta una solución técnicamente viable con margen holgado.
 - En todos los casos, la memoria debe mantener explícita la diferencia entre "mínimo funcional" (10 dB) y "mínimo robusto" (15 dB).
+
+Figura 21. Okumura-Hata (ganancias fijas): margen en 10 km en función de la altura del gateway.
+Insertar aquí la figura correspondiente: curva de margen en 10 km vs altura, con marcado de h_min,10 y h_min,15.
+Conclusión breve: La figura ilustra cómo el margen de enlace en el extremo lejano (10 km) aumenta linealmente con la altura del gateway en el modelo Okumura-Hata con ganancias fijas (2 dBi / 2.2 dBi). Se identifica claramente h_min,10 = 8 m como la altura mínima funcional y h_min,15 = 14 m como la altura mínima robusta (15 dB).
+
+Figura 22. Okumura-Hata (ganancias fijas): perfiles de margen vs distancia para alturas representativas.
+Insertar aquí la figura correspondiente: curvas de margen vs distancia para h = 10 m, 14 m y 20 m, con líneas de umbral.
+Conclusión breve: La comparación de perfiles muestra cómo el margen en el extremo (10 km) mejora con altura, confirmando que h = 14 m es suficiente para alcanzar 15 dB de margen robusto en el modelo conservador de canal. En cambio, h = 10 m alcanza solo 12.61 dB en el extremo, situándose entre los dos umbrales de decisión.
+
+Figura 23. Okumura-Hata (ganancias REALES de antena): margen en 10 km en función de la altura del gateway.
+Insertar aquí la figura correspondiente: curva de margen en 10 km vs altura con ganancias reales del monopolo y patch, con marcado de h_min,10 y h_min,15.
+Conclusión breve: Al usar las ganancias reales del monopolo y patch microstrip (que varían con el ángulo de elevación de llegada), se observa que el margen de enlace evoluciona de forma significativamente diferente al caso de ganancias fijas. Los resultados muestran h_min,10 = 6 m y h_min,15 = 10 m, mejorando en 2 m y 4 m respectivamente respecto a Barrido A. Esta validación intermedia demuestra que la dependencia angular real aporta mejora sustancial sin necesidad de optimización adicional como tilt.
+
+Figura 24. Okumura-Hata (ganancias REALES de antena): perfiles de margen vs distancia para alturas representativas.
+Insertar aquí la figura correspondiente: curvas de margen vs distancia para h = 5 m, 10 m, 14 m y 20 m con ganancias reales de antena.
+Conclusión breve: La comparación de perfiles con ganancias reales demuestra cómo la respuesta angular de las antenas afecta a la distribución de margen a lo largo del trazado. El perfil a h = 10 m muestra margen de 15.25 dB en el extremo (10 km), cumpliendo tanto el umbral funcional como el robusto. La progresión suave de márgenes refleja la ganancia variable con ángulo, capturando el efecto realista de la respuesta de las antenas a elevaciones bajas.
 
 ### 2.4 Comparativa por desacoplo de polarización: casos $L_{pol}=0$ dB y $L_{pol}=3$ dB
 Para analizar la sensibilidad del radioenlace frente a desalineación de polarización, se comparan dos escenarios:
@@ -162,8 +186,8 @@ Implicaciones prácticas:
 - La condición de aceptación debe revalidarse con el umbral exigido (10 dB o 15 dB según criterio de diseño).
 
 Resultados comparativos obtenidos:
-- Caso $L_{pol}=0$ dB (configuración robusta de referencia): margen peor caso = 30.56 dB; margen a 10 km = 30.56 dB.
-- Caso $L_{pol}=3$ dB (inferencia del modelo): margen peor caso = 27.56 dB; margen a 10 km = 27.56 dB.
+- Caso $L_{pol}=0$ dB (configuración robusta de referencia): margen peor caso = 19.91 dB; margen a 10 km = 19.91 dB.
+- Caso $L_{pol}=3$ dB (inferencia del modelo): margen peor caso = 16.91 dB; margen a 10 km = 16.91 dB.
 - Configuración robusta en ambos casos: se mantiene la misma geometría del barrido de referencia (misma altura y mismo tilt), variando únicamente $L_{pol}$.
 
 Redacción comparativa propuesta:
@@ -258,7 +282,23 @@ Interpretación: con $h_{TX}=10$ m el enlace es viable para criterio funcional d
 La evidencia completa de correcto funcionamiento debe incluir, en el documento final, tres bloques: diagramas de directividad, representación de |S11| y resultados numéricos del balance de enlace (potencia recibida, margen y alcance estimado).
 
 ### Conclusiones del apartado 5
-El enlace puede considerarse funcional cuando la potencia recibida supera la sensibilidad con margen positivo y las antenas se mantienen adaptadas en banda. Para diseño robusto, el criterio de 15 dB debe verificarse con el modelo declarado: 14 m en el barrido conservador de ganancias fijas, y validación complementaria con el barrido electromagnético de antenas diseñadas.
+El enlace puede considerarse funcional cuando la potencia recibida supera la sensibilidad con margen positivo y las antenas se mantienen adaptadas en banda. Para diseño robusto, el criterio de 15 dB debe verificarse con el modelo declarado.
+
+La validación del enlace se estructura en tres niveles complementarios:
+
+1. **Barrido A (conservador de propagación)**: Okumura-Hata con ganancias fijas (2 dBi / 2.2 dBi). Proporciona una cota conservadora e independiente de patrones de antena específicos. Resultados: $h_{min,10}=8$ m, $h_{min,15}=14$ m (Figuras 21–22).
+
+2. **Barrido A+ (conservador con dependencia angular)**: Okumura-Hata con ganancias reales del monopolo y patch microstrip, que varían según ángulo de elevación. Permite cuantificar el impacto de la respuesta angular sin optimización de tilt. Resultados: $h_{min,10}=6$ m (margen 10.58 dB), $h_{min,15}=10$ m (margen 15.25 dB) (Figuras 23–24). La mejora respecto a Barrido A (2 m menos en umbral funcional y 4 m menos en umbral robusto) demuestra el impacto significativo de usar ganancias reales dependientes del ángulo.
+
+3. **Barrido B (electromagnético completo)**: Okumura-Hata + patrones reales de antena + tilt + peor caso azimutal (script barrido_gateway_gasoducto.m). Proporciona validación electromagnética completa con todas las variables del sistema. Resultados: altura mínima robusta de 9 m con tilt -1 deg (15.39 dB a 10 km), caso representativo en h=10 m con tilt -1 deg (16.33 dB) y mejor configuración por peor caso en h=15 m con tilt -1 deg (19.91 dB).
+
+El análisis del Barrido A proporciona una cota conservadora de altura requerida: $h_{min,10}=8$ m para funcionalidad y $h_{min,15}=14$ m para robustez. Este barrido aísla la contribución del modelo de propagación, eliminando dependencias de patrones específicos de antena y permitiendo una evaluación pura del canal en el escenario rural del gasoducto. 
+
+El Barrido A+ valida que al introducir ganancias reales del monopolo y patch que varían con el ángulo de elevación (sin optimización adicional como tilt), la altura requerida mejora significativamente: $h_{min,10}=6$ m (2 m de reducción) y $h_{min,15}=10$ m (4 m de reducción). Esta mejora demuestra que el modelo de ganancias fijas es sobradamente conservador, y que la dependencia angular real del patrón de las antenas contribuye notablemente a mejorar el margen de enlace disponible.
+
+El Barrido B (barrido_gateway_gasoducto.m con patrones reales, tilt optimizado y análisis de peor caso azimutal) demuestra que con antenas diseñadas, optimización de orientación y validación de cobertura angular, se alcanza robustez (≥15 dB) desde h=9 m con tilt -1 deg (15.39 dB a 10 km), y con h=10 m se obtiene margen robusto de 16.33 dB. Además, la configuración que maximiza el peor caso en el barrido es h=15 m con tilt -1 deg (19.91 dB).
+
+Por tanto, la validación completa del enlace exige tres etapas que proporcionan mejora progresiva: primero verificación conservadora de propagación pura con ganancias fijas (Barrido A, h_min,15 = 14 m), segundo validación de dependencia angular con antenas reales (Barrido A+, h_min,15 = 10 m), y tercero verificación electromagnética completa del sistema con tilt optimizado (Barrido B, h_min,15 = 9 m). Los tres niveles son necesarios para justificar técnicamente la altura de instalación del gateway según el nivel de conservadurismo requerido y para demostrar la mejora aportada por cada nivel de validación.
 
 ## 6. Criterios formales de presentación de resultados
 Conforme a las instrucciones de la práctica, todas las ilustraciones deben presentarse numeradas y con pie de figura descriptivo. Asimismo, cada gráfica debe indicar de forma explícita la magnitud y unidad en cada eje. Este requisito es esencial para la trazabilidad técnica y para la evaluación objetiva por parte del tribunal.
@@ -279,7 +319,7 @@ El trabajo realizado permite afirmar que el diseño del enlace RF IoT en 868 MHz
 
 En términos de ingeniería aplicada, la solución propuesta demuestra la viabilidad de un sistema LoRaWAN para monitoreo distribuido en gasoductos: sensores de bajo consumo alimentados por batería, cobertura extendida y posibilidad de implementación con componentes comerciales, lo que favorece una arquitectura eficiente, escalable y de bajo coste. La propuesta final debe consolidarse en el documento de entrega incorporando las figuras numeradas, las métricas de adaptación en banda y los resultados de potencia recibida y margen de enlace en modelo realista.
 
-Como cierre de diseño, la memoria adopta explícitamente dos niveles de decisión: criterio funcional de 10 dB y criterio robusto de 15 dB. Bajo enfoque conservador de canal (ganancias fijas), el mínimo robusto exige 14 m; bajo validación electromagnética con antenas diseñadas, la solución de 10 m presenta margen holgado en el caso modelado. Esta doble trazabilidad permite defender la decisión final de altura según el nivel de conservadurismo requerido por operación y despliegue.
+Como cierre de diseño, la memoria adopta explícitamente dos niveles de decisión: criterio funcional de 10 dB y criterio robusto de 15 dB, validados mediante tres barridos complementarios. Bajo enfoque conservador de propagación (ganancias fijas), el mínimo robusto exige 14 m; bajo validación con ganancias reales dependientes del ángulo, se obtiene validación intermedia; bajo validación electromagnética con antenas diseñadas y optimización de orientación, la solución de 10 m presenta margen holgado en el caso modelado. Esta triple validación permite defender la decisión final de altura según el nivel de conservadurismo requerido por operación y despliegue.
 
 ## 9. Guía breve de integración en Word
 Para pegar este texto directamente en el documento final se recomienda:
@@ -347,5 +387,6 @@ Conclusión breve: La corriente superficial valida el modo resonante esperado y 
 
 ### Conclusión del apartado 10
 La secuencia de Figuras 1 a 16 proporciona evidencia completa de geometría, adaptación y radiación para ambas soluciones de antena. Esta trazabilidad visual permite justificar de forma sólida la elección final del sistema radiante para monitoreo distribuido en gasoductos.
+
 
 
