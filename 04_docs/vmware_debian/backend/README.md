@@ -143,12 +143,21 @@ Uso operativo de la consola:
 - `source_timestamp`: timestamp original.
 - `received_at`: timestamp de ingesta.
 
-Ejemplo de arranque local dentro de la VM:
+Ejemplo de arranque local dentro de la VM con Python directo:
 
 ```bash
+cd /ruta/a/SARC-Drone/04_docs/vmware_debian/backend
+python -m venv .venv
+.venv/Scripts/activate
 pip install -r requirements.txt
 uvicorn app:app --host 0.0.0.0 --port 8000
 ```
+
+Nota:
+
+- PostgreSQL ya puede estar instalado en la VM y apuntar a `192.168.1.134`.
+- Si Mosquitto aun no existe, el backend ahora arranca igual y la salud mostrara `mqtt_ready=false` hasta que el broker este disponible.
+- Cuando instales Mosquitto en la VM, usa `MQTT_HOST=192.168.1.134`.
 
 ## Consola web
 

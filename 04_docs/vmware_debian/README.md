@@ -39,10 +39,10 @@ Filosofia de intercambio de datos:
 ```text
 04_docs/vmware_debian/
 ├── .env.example
-├── docker-compose.yml
 ├── README.md
+├── QUICKSTART.md
+├── CHECKLIST_E2E.md
 ├── backend/
-│   ├── Dockerfile
 │   ├── app.py
 │   └── requirements.txt
 ├── mosquitto/
@@ -55,23 +55,17 @@ Filosofia de intercambio de datos:
 
 ## 1) Prerrequisitos en Debian
 
-Instalar Docker y Docker Compose en la VM Debian.
-
-Ejemplo resumido:
+Instalar Python y las herramientas base en la VM Debian.
 
 ```bash
 sudo apt update
-sudo apt install -y ca-certificates curl gnupg
-sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-  $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt update
-sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-sudo usermod -aG docker $USER
+sudo apt install -y python3 python3-venv python3-pip
+```
+
+Mosquitto todavia no esta instalado en la VM. Cuando quieras activar MQTT en la misma maquina:
+
+```bash
+sudo apt install -y mosquitto mosquitto-clients
 ```
 
 ## 1.1) Visión general del flujo
@@ -95,7 +89,7 @@ Puntos clave:
 
 ## 2) IP privada de la VM
 
-Asigna una IP privada estable a la VM, por ejemplo `192.168.56.20` o la que use tu red VMware.
+Asigna una IP privada estable a la VM, por ejemplo `192.168.1.134` o la que use tu red VMware.
 
 Los puertos que se exponen son:
 
@@ -115,26 +109,22 @@ Edita los secretos antes de levantar el stack.
 
 ## 4) Configurar Mosquitto
 
-La configuración base está en `mosquitto/mosquitto.conf`.
+La configuracion base esta en `mosquitto/mosquitto.conf`.
 
-Debes crear el archivo de contraseñas del broker en la VM o dentro del contenedor.
+Esto quedara pendiente hasta que instales Mosquitto en la VM.
+
+Debes crear el archivo de contraseñas del broker en la VM cuando llegue ese paso.
 
 Ejemplo para crear usuarios:
 
 ```bash
-docker run --rm -it \
-  -v "$PWD/mosquitto:/mosquitto/config" \
-  eclipse-mosquitto \
-  mosquitto_passwd -c /mosquitto/config/passwords drone_client
+mosquitto_passwd -c /etc/mosquitto/passwords drone_client
 ```
 
 Luego repite para el backend:
 
 ```bash
-docker run --rm -it \
-  -v "$PWD/mosquitto:/mosquitto/config" \
-  eclipse-mosquitto \
-  mosquitto_passwd /mosquitto/config/passwords backend_service
+mosquitto_passwd /etc/mosquitto/passwords backend_service
 ```
 
 ACL esperado:
@@ -143,23 +133,27 @@ ACL esperado:
 - `backend_service` puede leer eventos y escribir comandos.
 - No dejar `allow_anonymous true` en producción.
 
-## 5) Levantar la pila completa
+## 5) Levantar el backend con Python directo
 
 ```bash
-docker compose up -d --build
+cd /ruta/a/SARC-Drone/04_docs/vmware_debian/backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 
-Servicios esperados:
+Servicios esperados ahora:
 
-- `sarc-postgres`
-- `sarc-mosquitto`
-- `sarc-edge-backend`
+- PostgreSQL ya disponible en `192.168.1.134`
+- Backend FastAPI corriendo en `8000`
 
-Si quieres reiniciar el stack completo desde cero:
+Si quieres reiniciar el backend desde cero:
 
 ```bash
-docker compose down -v
-docker compose up -d --build
+pkill -f "uvicorn app:app" || true
+source .venv/bin/activate
+uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 
 ## 6) Verificacion rapida
@@ -167,13 +161,13 @@ docker compose up -d --build
 Health del backend:
 
 ```bash
-curl http://192.168.56.20:8000/health
+curl http://192.168.1.134:8000/health
 ```
 
 Consola remota web:
 
 ```bash
-http://192.168.56.20:8000/console
+http://192.168.1.134:8000/console
 ```
 
 Desde esa pagina puedes:
@@ -187,23 +181,23 @@ Desde esa pagina puedes:
 - Enviar `ABORT_MISSION`.
 - Enviar `REQUEST_TELEMETRY`.
 
-Probar MQTT:
+Probar MQTT cuando Mosquitto ya exista:
 
 ```bash
-docker exec -it sarc-mosquitto mosquitto_sub -h localhost -p 1883 -u drone_client -P TU_PASSWORD -t 'sarc/drone/#' -v
+mosquitto_sub -h 192.168.1.134 -p 1883 -u drone_client -P TU_PASSWORD -t 'sarc/drone/#' -v
 ```
 
 Probar publicación de evento ficticio:
 
 ```bash
-docker exec -it sarc-mosquitto mosquitto_pub -h localhost -p 1883 -u drone_client -P TU_PASSWORD \
+mosquitto_pub -h 192.168.1.134 -p 1883 -u drone_client -P TU_PASSWORD \
   -t sarc/drone/telemetry -m '{"drone_id":"sarc_drone_001","timestamp":1730000000000,"lat":0.0,"lon":0.0,"alt":20.0,"search_pattern":"lawnmower","fps":12.5}'
 ```
 
 Enviar comando de prueba:
 
 ```bash
-curl -X POST http://192.168.56.20:8000/command/sarc_drone_001 \
+curl -X POST http://192.168.1.134:8000/command/sarc_drone_001 \
   -H 'Content-Type: application/json' \
   -d '{"id":"cmd-1","type":"REQUEST_TELEMETRY"}'
 ```
@@ -211,13 +205,13 @@ curl -X POST http://192.168.56.20:8000/command/sarc_drone_001 \
 Probar seguimiento remoto:
 
 ```bash
-curl -X POST "http://192.168.56.20:8000/follow/sarc_drone_001?enabled=true"
+curl -X POST "http://192.168.1.134:8000/follow/sarc_drone_001?enabled=true"
 ```
 
 Probar aborto de mision:
 
 ```bash
-curl -X POST http://192.168.56.20:8000/command/sarc_drone_001 \
+curl -X POST http://192.168.1.134:8000/command/sarc_drone_001 \
   -H 'Content-Type: application/json' \
   -d '{"id":"cmd-2","type":"ABORT_MISSION"}'
 ```
@@ -328,7 +322,7 @@ Campos principales:
 
 La app debe apuntar al broker de la VM Debian:
 
-- host: `192.168.56.20` o la IP real de tu VM
+- host: `192.168.1.134` o la IP real de tu VM
 - puerto: `1883`
 - usuario: `drone_client`
 
@@ -358,14 +352,14 @@ Para que la app funcione con la VM:
 
 ## 10) Orden de despliegue recomendado
 
-1. Instalar Docker en Debian.
-2. Asignar IP privada estable a la VM.
-3. Configurar `.env`.
-4. Crear passwords de Mosquitto.
-5. Ejecutar `docker compose up -d --build`.
-6. Actualizar la app Android con la IP del broker.
+1. Confirmar PostgreSQL ya accesible en `192.168.1.134`.
+2. Crear el entorno Python del backend.
+3. Ejecutar `uvicorn app:app --host 0.0.0.0 --port 8000`.
+4. Verificar `GET /health`.
+5. Instalar Mosquitto en la VM cuando pases a la parte MQTT.
+6. Ajustar `MQTT_HOST=192.168.1.134` en `.env`.
 7. Probar telemetria, detecciones, tracking y comandos.
-8. Abrir `http://IP_DE_LA_VM:8000/console` y validar eventos y comandos.
+8. Abrir `http://192.168.1.134:8000/console` y validar eventos y comandos.
 
 ## 11) Referencias rapidas
 
@@ -377,20 +371,20 @@ Para la descripcion completa de la pila, payloads, tablas y troubleshooting, est
 
 ### La consola web no carga
 
-- Verifica que el puerto `8000` esté expuesto.
-- Revisa `docker compose logs -f backend`.
-- Comprueba `http://IP_DE_LA_VM:8000/health`.
+- Verifica que `uvicorn` siga ejecutandose en la terminal.
+- Revisa la salida del proceso del backend.
+- Comprueba `http://192.168.1.134:8000/health`.
 
 ### MQTT no conecta
 
-- Revisa usuario, contraseña y ACL.
-- Revisa `mosquitto.log`.
+- Revisa usuario, contraseña y ACL de Mosquitto.
+- Comprueba que el broker ya esté instalado en la VM.
 - Comprueba que la app use la IP privada correcta de la VM.
 
 ### No se guardan eventos en PostgreSQL
 
 - Verifica que `POSTGRES_DB=sarc_drone` y `POSTGRES_SCHEMA=sarc_drone`.
-- Revisa `docker compose logs -f backend`.
+- Revisa la salida del backend o `journalctl` si lo ejecutas como servicio.
 - Comprueba que llegue `drone_id` en el payload.
 
 ### No responde FOLLOW_TARGET

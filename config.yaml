@@ -119,11 +119,11 @@ drone:
 iot:
   deployment: "vmware_debian"
   vmware:
-    ip: "192.168.56.20"
-    console_url: "http://192.168.56.20:8000/console"
-    backend_url: "http://192.168.56.20:8000"
+    ip: "192.168.1.134"
+    console_url: "http://192.168.1.134:8000/console"
+    backend_url: "http://192.168.1.134:8000"
   mqtt:
-    broker: "192.168.56.20"
+    broker: "192.168.1.134"
     port: 1883
     tls: false
     username: "drone_client"
@@ -140,7 +140,7 @@ iot:
   database:
     type: "postgresql"
     postgresql:
-      host: "192.168.56.20"
+      host: "192.168.1.134"
       port: 5432
       database: "sarc_drone"
       schema: "sarc_drone"

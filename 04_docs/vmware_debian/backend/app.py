@@ -288,13 +288,18 @@ def start_mqtt() -> None:
     if _mqtt_client is not None:
         return
 
-    _mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id=MQTT_CLIENT_ID)
-    _mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
-    _mqtt_client.on_connect = on_connect
-    _mqtt_client.on_message = on_message
-    _mqtt_client.reconnect_delay_set(min_delay=1, max_delay=30)
-    _mqtt_client.connect(MQTT_HOST, MQTT_PORT, keepalive=60)
-    _mqtt_client.loop_start()
+    try:
+        _mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id=MQTT_CLIENT_ID)
+        _mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
+        _mqtt_client.on_connect = on_connect
+        _mqtt_client.on_message = on_message
+        _mqtt_client.reconnect_delay_set(min_delay=1, max_delay=30)
+        _mqtt_client.connect(MQTT_HOST, MQTT_PORT, keepalive=60)
+        _mqtt_client.loop_start()
+    except Exception as exc:
+        _mqtt_ready.clear()
+        _mqtt_client = None
+        print(f"[WARN] MQTT no disponible aun: {exc}")
 
 
 @app.on_event("startup")

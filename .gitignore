@@ -29,6 +29,7 @@ yolo26n.pt
 *.bak
 calibration_image_sample_data_*.npy
 05_tests/reports/
+04_docs/vmware_debian/.env
 
 # OS/editor
 .DS_Store

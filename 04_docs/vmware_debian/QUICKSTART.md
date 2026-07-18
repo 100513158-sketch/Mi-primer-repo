@@ -1,120 +1,79 @@
 # SARC-Drone VMware Debian Quickstart
 
-Guia corta para levantar la solucion en la VM Debian y probar la consola remota.
+Guia corta para correr el backend con Python directo en la VM Debian. PostgreSQL ya esta instalado en `192.168.1.134`; Mosquitto todavia no, asi que el backend puede arrancar pero `mqtt_ready` quedara en `false` hasta instalar el broker.
 
 ## 1) Preparar la VM Debian
 
 ```bash
 sudo apt update
-sudo apt install -y docker.io docker-compose-plugin
-sudo usermod -aG docker $USER
+sudo apt install -y python3 python3-venv python3-pip
 ```
 
-Cierra sesion y vuelve a entrar para que aplique el grupo `docker`.
-
-## 2) Configurar la carpeta del proyecto
+Si luego vas a activar la parte MQTT en la misma VM, instala tambien:
 
 ```bash
-cd /ruta/a/04_docs/vmware_debian
+sudo apt install -y mosquitto mosquitto-clients
+```
+
+## 2) Configurar el backend
+
+```bash
+cd /ruta/a/SARC-Drone/04_docs/vmware_debian/backend
 cp .env.example .env
 ```
 
-Edita `.env` con tus valores reales:
+Edita `.env` con estos valores mínimos:
 
+- `POSTGRES_HOST=192.168.1.134`
 - `POSTGRES_PASSWORD`
+- `MQTT_HOST=192.168.1.134` cuando tengas Mosquitto instalado
 - `MQTT_PASSWORD`
-- `MQTT_HOST` si cambias la IP del broker
-- `MQTT_CLIENT_ID` si cambia el dron
 
-## 3) Crear passwords de Mosquitto
+## 3) Crear entorno Python
 
 ```bash
-docker run --rm -it \
-  -v "$PWD/mosquitto:/mosquitto/config" \
-  eclipse-mosquitto \
-  mosquitto_passwd -c /mosquitto/config/passwords drone_client
-
-docker run --rm -it \
-  -v "$PWD/mosquitto:/mosquitto/config" \
-  eclipse-mosquitto \
-  mosquitto_passwd /mosquitto/config/passwords backend_service
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-## 4) Levantar la pila
+## 4) Arrancar el backend
 
 ```bash
-docker compose up -d --build
+uvicorn app:app --host 0.0.0.0 --port 8000
 ```
-
-Servicios esperados:
-
-- `sarc-postgres`
-- `sarc-mosquitto`
-- `sarc-edge-backend`
 
 ## 5) Verificar salud
 
 ```bash
-curl http://IP_DE_LA_VM:8000/health
+curl http://192.168.1.134:8000/health
 ```
 
-Debe responder con `status=ok` y `mqtt_ready=true`.
+Esperado:
+
+- `status=ok`
+- `database=sarc_drone`
+- `mqtt_ready=false` mientras Mosquitto no este disponible
 
 ## 6) Abrir la consola remota
 
 ```text
-http://IP_DE_LA_VM:8000/console
+http://192.168.1.134:8000/console
 ```
 
-Desde ahi puedes:
+Desde ahi puedes ver eventos y preparar la consola; para enviar comandos remotos hace falta que Mosquitto ya este instalado.
 
-- ver eventos recientes
-- filtrar por `telemetry`, `detections`, `tracking`, `pose` o `ack`
-- guardar el `drone_id`
-- exportar JSON
-- enviar `FOLLOW_TARGET`
-- enviar `ABORT_MISSION`
-- enviar `REQUEST_TELEMETRY`
+## 7) Cuando instales Mosquitto
 
-## 7) Pruebas rapidas
+1. Configura usuario y password.
+2. Ajusta `MQTT_HOST=192.168.1.134` en `.env`.
+3. Reinicia el backend.
+4. Verifica que `mqtt_ready=true`.
 
-### Enviar seguimiento remoto
+## 8) Probar comandos
 
 ```bash
-curl -X POST "http://IP_DE_LA_VM:8000/follow/sarc_drone_001?enabled=true"
-```
-
-### Pedir telemetria
-
-```bash
-curl -X POST http://IP_DE_LA_VM:8000/command/sarc_drone_001 \
-  -H 'Content-Type: application/json' \
-  -d '{"id":"cmd-1","type":"REQUEST_TELEMETRY"}'
-```
-
-### Abortar mision
-
-```bash
-curl -X POST http://IP_DE_LA_VM:8000/command/sarc_drone_001 \
-  -H 'Content-Type: application/json' \
-  -d '{"id":"cmd-2","type":"ABORT_MISSION"}'
-```
-
-## 8) Comprobaciones esperadas
-
-- En MQTT aparece el comando en `sarc/commands/drone/sarc_drone_001`.
-- La app responde con ACK en `sarc/drone/ack`.
-- PostgreSQL guarda registros en `sarc_drone.events` y `sarc_drone.commands`.
-- Si luego publicas `pose`, se guarda en `sarc_drone.pose_events`.
-
-## 9) Parar la pila
-
-```bash
-docker compose down
-```
-
-Si quieres reiniciar desde cero:
-
-```bash
-docker compose down -v
+curl -X POST "http://192.168.1.134:8000/follow/sarc_drone_001?enabled=true"
+curl -X POST http://192.168.1.134:8000/command/sarc_drone_001 -H 'Content-Type: application/json' -d '{"id":"cmd-1","type":"REQUEST_TELEMETRY"}'
+curl -X POST http://192.168.1.134:8000/command/sarc_drone_001 -H 'Content-Type: application/json' -d '{"id":"cmd-2","type":"ABORT_MISSION"}'
 ```
