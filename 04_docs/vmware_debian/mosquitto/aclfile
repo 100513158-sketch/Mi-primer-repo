@@ -1,0 +1,9 @@
+user drone_client
+topic write sarc/drone/#
+topic read sarc/commands/drone/#
+topic write sarc/drone/ack
+
+user backend_service
+topic read sarc/drone/#
+topic write sarc/commands/drone/#
+topic write sarc/drone/ack

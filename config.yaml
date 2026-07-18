@@ -1,0 +1,297 @@
+# config.yaml - Configuracion central del proyecto SARC-Drone
+
+paths:
+  project_root: "C:/SARC-Drone"
+  datasets_raw: "C:/SARC-Drone/00_datasets/raw"
+  datasets_processed: "C:/SARC-Drone/00_datasets/processed"
+  dataset_config: "C:/SARC-Drone/00_datasets/data.yaml"
+  training_output: "C:/SARC-Drone/01_training/runs"
+  weights_dir: "C:/SARC-Drone/02_models/weights"
+  export_dir: "C:/SARC-Drone/02_models/exported"
+
+datasets:
+  visdrone:
+    url: "https://github.com/ultralytics/assets/releases/download/v0.0.0"
+    files:
+      - "VisDrone2019-DET-train.zip"
+      - "VisDrone2019-DET-val.zip"
+      - "VisDrone2019-DET-test-dev.zip"
+    class_mapping:
+      0: 0
+      1: 0
+  okutama:
+    url: "https://okutama-action.s3.eu-central-1.amazonaws.com/Sample.zip"
+  nitc_rescue:
+    repo: "https://github.com/shubhasreeav/NITC-Person-Rescue.git"
+
+training:
+  memory:
+    max_gpu_memory_gb: 10
+    max_batch_gpu: 8
+    workers_gpu: 2
+    workers_cpu: 2
+  detection:
+    model: "C:/SARC-Drone/01_training/scripts/yolo26n.pt"
+    epochs: 300
+    batch_size: 8
+    imgsz: 640
+    optimizer: "MuSGD"
+    lr0: 0.001
+    lrf: 0.01
+    momentum: 0.937
+    weight_decay: 0.0005
+    warmup_epochs: 3
+    mosaic: 1.0
+    mixup: 0.2
+    copy_paste: 0.1
+    scale: 0.5
+    fliplr: 0.5
+    flipud: 0.1
+    hsv_h: 0.015
+    hsv_s: 0.7
+    hsv_v: 0.4
+    patience: 50
+  pose:
+    model: "yolo26n-pose.pt"
+    epochs: 200
+    batch_size: 8
+    imgsz: 640
+    optimizer: "MuSGD"
+    lr0: 0.001
+    lrf: 0.01
+    mosaic: 1.0
+    mixup: 0.1
+    copy_paste: 0.05
+    scale: 0.5
+    fliplr: 0.5
+    patience: 50
+    kpt_shape: [17, 3]
+    flip_idx: [0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15]
+  transfer_learning:
+    enabled: true
+    source_weights: "C:/SARC-Drone/01_training/scripts/yolo26n.pt"
+    freeze_layers: 10
+    epochs: 100
+    lr0: 0.0001
+
+export:
+  tflite:
+    imgsz: 640
+    int8: true
+    use_gpu_delegate: true
+    nms: true
+  onnx:
+    imgsz: 640
+    dynamic: true
+    opset: 12
+  openvino:
+    half: true
+
+android:
+  package_name: "com.sarc.drone.vision"
+  model_asset_name: "best_detection.tflite"
+  input_size: 640
+  confidence_threshold: 0.45
+  nms_threshold: 0.5
+  tracking:
+    kp: 0.8
+    ki: 0.1
+    kd: 0.3
+    safe_distance_min: 5.0
+    safe_distance_max: 30.0
+    target_distance: 15.0
+    center_threshold: 0.05
+
+drone:
+  udp_port: 14550
+  local_port: 14551
+  default_ip: "192.168.1.1"
+  mavlink_system_id: 255
+  mavlink_component_id: 1
+  target_system: 1
+  target_component: 1
+
+# ========== IOT / VMWARE DEBIAN ========== 
+# Fuente de verdad para la pila operativa actual:
+# - Mosquitto en la VM Debian
+# - PostgreSQL en la misma VM
+# - Backend FastAPI como consola remota e ingesta
+iot:
+  deployment: "vmware_debian"
+  vmware:
+    ip: "192.168.56.20"
+    console_url: "http://192.168.56.20:8000/console"
+    backend_url: "http://192.168.56.20:8000"
+  mqtt:
+    broker: "192.168.56.20"
+    port: 1883
+    tls: false
+    username: "drone_client"
+    password: "change_me_drone_client"
+    client_id: "sarc_drone_001"
+    keepalive: 60
+    topics:
+      telemetry: "sarc/drone/telemetry"
+      detections: "sarc/drone/detections"
+      tracking: "sarc/drone/tracking"
+      pose: "sarc/drone/pose"
+      commands: "sarc/commands/drone"
+      ack: "sarc/drone/ack"
+  database:
+    type: "postgresql"
+    postgresql:
+      host: "192.168.56.20"
+      port: 5432
+      database: "sarc_drone"
+      schema: "sarc_drone"
+      user: "sarc_admin"
+      password: "change_me_postgres"
+
+autonomy:
+  search_patterns:
+    - "spiral"
+    - "lawnmower"
+    - "waypoint"
+  default_search: "lawnmower"
+  collision_avoidance:
+    enabled: true
+    sensor_range: 10.0
+    safety_margin: 2.0
+  battery:
+    critical_level: 15
+    return_to_home_level: 25
+    home_position: [0.0, 0.0, 30.0]
+  simulation:
+    enabled: true
+    fake_gps: true
+    fake_telemetry: true
+
+# ========== PIPELINE DE ENTRENAMIENTO CURRICULAR ==========
+# Orden: de más genérico (VisDrone) a más específico SARC (C2A).
+# Cada etapa inicializa sus pesos desde el mejor checkpoint de la etapa anterior.
+training_pipeline:
+  order:
+    - VisDrone
+    - NOMAD
+    - OKUTAMA
+    - SeaDronesSee
+    - NITC
+    - RESDataset
+    - C2A
+
+  base_model: "C:/SARC-Drone/01_training/scripts/yolo26n.pt"  # modelo base obligatorio (sin fallback)
+
+  # Hiperparámetros por etapa.
+  # Los no definidos aquí se heredan de training.detection en este mismo archivo.
+  per_dataset:
+    VisDrone:
+      epochs: 300
+      batch_size: 8
+      freeze: 0       # sin freeze: aprendizaje completo desde la base
+      lr0: 0.001
+      lrf: 0.01
+    NOMAD:
+      epochs: 200
+      batch_size: 8
+      freeze: 0
+      lr0: 0.001
+      lrf: 0.01
+    OKUTAMA:
+      epochs: 200
+      batch_size: 8
+      freeze: 0
+      lr0: 0.001
+      lrf: 0.01
+    SeaDronesSee:
+      epochs: 150
+      batch_size: 8
+      freeze: 5       # congelar primeras 5 capas: dominio marítimo SAR
+      lr0: 0.0005
+      lrf: 0.005
+    NITC:
+      epochs: 100
+      batch_size: 8
+      freeze: 10      # fine-tune profundo: dominio rescate
+      lr0: 0.0001
+      lrf: 0.001
+    RESDataset:
+      epochs: 100
+      batch_size: 8
+      freeze: 10
+      lr0: 0.0001
+      lrf: 0.001
+    C2A:
+      epochs: 100
+      batch_size: 8
+      freeze: 10      # fine-tune final: dominio SARC específico
+      lr0: 0.00005
+      lrf: 0.001
+
+  # Nombres de clase por dataset.
+  # Si un dataset no aparece aquí, generate_dataset_yamls.py los infiere desde los labels.
+  class_names:
+    VisDrone:
+      0: person
+    NOMAD:
+      0: person
+    OKUTAMA:
+      0: person
+    SeaDronesSee:
+      0: swimmer
+      1: boat
+      2: jetski
+      3: life_saving_appliances
+      4: buoy
+    NITC:
+      0: person
+    RESDataset:
+      0: person
+    C2A:
+      0: person
+
+# ========== VALIDACION Go/No-Go (post-entrenamiento / despliegue) ==========
+go_nogo:
+  profiles:
+    model_candidate:
+      required_stage_results:
+        - VisDrone
+        - NOMAD
+        - OKUTAMA
+        - SeaDronesSee
+        - NITC
+        - RESDataset
+        - C2A
+      final_stage: "C2A"
+      required_final_weight: "best_C2A.pt"
+      min_final_precision: 0.45
+      min_final_recall: 0.45
+      min_final_map50: 0.45
+      min_final_map50_95: 0.20
+      max_map50_drop_vs_peak: 0.10
+      mean_map50_last_n: 5
+      min_mean_map50_last_n: 0.42
+      require_exports: false
+
+    release_edge_android:
+      required_stage_results:
+        - VisDrone
+        - NOMAD
+        - OKUTAMA
+        - SeaDronesSee
+        - NITC
+        - RESDataset
+        - C2A
+      final_stage: "C2A"
+      required_final_weight: "best_C2A.pt"
+      min_final_precision: 0.50
+      min_final_recall: 0.50
+      min_final_map50: 0.50
+      min_final_map50_95: 0.24
+      max_map50_drop_vs_peak: 0.08
+      mean_map50_last_n: 5
+      min_mean_map50_last_n: 0.46
+      require_exports: true
+      required_export_paths:
+        - "tflite/best_C2A/best_C2A.tflite"
+        - "onnx/best_C2A.onnx"
+        - "openvino/best_C2A"

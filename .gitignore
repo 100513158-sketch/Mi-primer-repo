@@ -1,0 +1,33 @@
+# Python environments
+.venv/
+venv/
+venv_sarc/
+sar_env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Datasets (local only)
+00_datasets/
+
+# Training artifacts
+01_training/runs/
+01_training/scripts/runs/
+02_models/weights/
+02_models/exported/
+
+# Android build artifacts
+03_android_app/build/
+03_android_app/SARCApp/.gradle/
+03_android_app/SARCApp/app/build/
+
+# Logs and temp
+*.log
+*.tmp
+*.bak
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
