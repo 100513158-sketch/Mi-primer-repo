@@ -16,6 +16,7 @@ __pycache__/
 01_training/scripts/runs/
 02_models/weights/
 02_models/exported/
+yolo26n.pt
 
 # Android build artifacts
 03_android_app/build/
@@ -26,6 +27,8 @@ __pycache__/
 *.log
 *.tmp
 *.bak
+calibration_image_sample_data_*.npy
+05_tests/reports/
 
 # OS/editor
 .DS_Store

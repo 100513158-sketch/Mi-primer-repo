@@ -17,6 +17,17 @@ EXPORT_DIR = path_from_config(CFG, "export_dir")
 DATASET_CONFIG = path_from_config(CFG, "dataset_config")
 
 
+def _resolve_calibration_data(model_path: Path) -> Path:
+    # Prefer per-dataset YAML when exporting staged checkpoints (e.g. best_C2A.pt).
+    stem = model_path.stem
+    if stem.startswith("best_"):
+        dataset_name = stem.replace("best_", "", 1)
+        dataset_yaml = Path("C:/SARC-Drone/00_datasets/processed") / dataset_name / "data.yaml"
+        if dataset_yaml.exists():
+            return dataset_yaml
+    return DATASET_CONFIG
+
+
 def _find_new_file(pattern: str):
     for f in Path(".").glob(pattern):
         return f
@@ -52,7 +63,7 @@ def export_to_tflite(model_path: Path):
     }
     if tflite_cfg["int8"]:
         args["int8"] = True
-        args["data"] = str(DATASET_CONFIG)
+        args["data"] = str(_resolve_calibration_data(model_path))
 
     model.export(**args)
 
@@ -115,8 +126,22 @@ def export_to_openvino(model_path: Path):
 
 
 def optimize_for_mobile(model_path: Path):
-    export_to_tflite(model_path)
-    export_to_onnx(model_path)
+    results = {
+        "tflite": None,
+        "onnx": None,
+    }
+
+    try:
+        results["tflite"] = export_to_tflite(model_path)
+    except Exception as exc:
+        logger.error("Fallo exportacion TFLite para %s: %s", model_path, exc)
+
+    try:
+        results["onnx"] = export_to_onnx(model_path)
+    except Exception as exc:
+        logger.error("Fallo exportacion ONNX para %s: %s", model_path, exc)
+
+    return results
 
 
 def main():
@@ -124,14 +149,36 @@ def main():
     pose = WEIGHTS_DIR / "best_pose.pt"
 
     if detection and detection.exists():
-        optimize_for_mobile(detection)
-        export_to_openvino(detection)
+        det_results = optimize_for_mobile(detection)
+        try:
+            det_results["openvino"] = export_to_openvino(detection)
+        except Exception as exc:
+            det_results["openvino"] = None
+            logger.error("Fallo exportacion OpenVINO para %s: %s", detection, exc)
+
+        logger.info(
+            "Resumen deteccion -> tflite: %s | onnx: %s | openvino: %s",
+            bool(det_results.get("tflite")),
+            bool(det_results.get("onnx")),
+            bool(det_results.get("openvino")),
+        )
     else:
         logger.warning("No se encontraron pesos de deteccion para exportar en %s", WEIGHTS_DIR)
 
     if pose.exists():
-        optimize_for_mobile(pose)
-        export_to_openvino(pose)
+        pose_results = optimize_for_mobile(pose)
+        try:
+            pose_results["openvino"] = export_to_openvino(pose)
+        except Exception as exc:
+            pose_results["openvino"] = None
+            logger.error("Fallo exportacion OpenVINO para %s: %s", pose, exc)
+
+        logger.info(
+            "Resumen pose -> tflite: %s | onnx: %s | openvino: %s",
+            bool(pose_results.get("tflite")),
+            bool(pose_results.get("onnx")),
+            bool(pose_results.get("openvino")),
+        )
 
 
 if __name__ == "__main__":
