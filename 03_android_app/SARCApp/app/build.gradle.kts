@@ -70,7 +70,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
 
     implementation("org.java-websocket:Java-WebSocket:1.5.4")
-    implementation("io.dronefleet.mavlink:dronefleet-mavlink:1.1.11")
+    implementation("io.dronefleet.mavlink:mavlink:1.1.11")
 
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     implementation("org.eclipse.paho:org.eclipse.paho.android.service:1.1.1")

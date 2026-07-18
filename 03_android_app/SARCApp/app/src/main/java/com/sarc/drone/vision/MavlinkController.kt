@@ -35,15 +35,15 @@ class MavlinkController(private val droneIp: String, private val dronePort: Int)
     }
 
     fun arm() {
-        sendCommandLong(MavCmd.MAV_CMD_COMPONENT_ARM_DISARM, 1.0)
+        sendCommandLong(MavCmd.MAV_CMD_COMPONENT_ARM_DISARM, 1.0f)
     }
 
     fun disarm() {
-        sendCommandLong(MavCmd.MAV_CMD_COMPONENT_ARM_DISARM, 0.0)
+        sendCommandLong(MavCmd.MAV_CMD_COMPONENT_ARM_DISARM, 0.0f)
     }
 
     fun takeoff(altitude: Float = 30.0f) {
-        sendCommandLong(MavCmd.MAV_CMD_NAV_TAKEOFF, param7 = altitude.toDouble())
+        sendCommandLong(MavCmd.MAV_CMD_NAV_TAKEOFF, param7 = altitude)
     }
 
     fun land() {
@@ -63,13 +63,13 @@ class MavlinkController(private val droneIp: String, private val dronePort: Int)
 
     private fun sendCommandLong(
         command: MavCmd,
-        param1: Double = 0.0,
-        param2: Double = 0.0,
-        param3: Double = 0.0,
-        param4: Double = 0.0,
-        param5: Double = 0.0,
-        param6: Double = 0.0,
-        param7: Double = 0.0
+        param1: Float = 0.0f,
+        param2: Float = 0.0f,
+        param3: Float = 0.0f,
+        param4: Float = 0.0f,
+        param5: Float = 0.0f,
+        param6: Float = 0.0f,
+        param7: Float = 0.0f
     ) {
         val msg = CommandLong.builder()
             .targetSystem(TARGET_SYSTEM)

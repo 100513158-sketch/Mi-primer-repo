@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sarc_primary">#0E5A8A</color>
+    <color name="sarc_primary_dark">#083A58</color>
+    <color name="sarc_accent">#FFB000</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+</resources>
