@@ -1,6 +1,6 @@
 # SARC-Drone VMware Debian Quickstart
 
-Guia corta para correr el backend con Python directo en la VM Debian. PostgreSQL ya esta instalado en `192.168.1.134`; Mosquitto todavia no, asi que el backend puede arrancar pero `mqtt_ready` quedara en `false` hasta instalar el broker.
+Guia corta para correr el backend con Python directo en la VM Debian usando la estructura validada en produccion: `/opt/sarc_drone_backend/venv`, `/opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/backend` y `/opt/sarc_drone_backend/.env`.
 
 ## 1) Preparar la VM Debian
 
@@ -18,20 +18,23 @@ sudo apt install -y mosquitto mosquitto-clients
 ## 2) Configurar el backend
 
 ```bash
-cd /ruta/a/SARC-Drone/04_docs/vmware_debian/backend
-cp .env.example .env
+cp /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/.env.example /opt/sarc_drone_backend/.env
 ```
 
 Edita `.env` con estos valores mínimos:
 
-- `POSTGRES_HOST=192.168.1.134`
-- `POSTGRES_PASSWORD`
-- `MQTT_HOST=192.168.1.134` cuando tengas Mosquitto instalado
+- `PGHOST=127.0.0.1`
+- `PGPORT=5432`
+- `PGDATABASE=sarc_drone`
+- `PGUSER=sarc_admin`
+- `PGPASSWORD`
+- `MQTT_HOST=127.0.0.1`
 - `MQTT_PASSWORD`
 
 ## 3) Crear entorno Python
 
 ```bash
+cd /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -40,6 +43,9 @@ pip install -r requirements.txt
 ## 4) Arrancar el backend
 
 ```bash
+cd /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/backend
+source /opt/sarc_drone_backend/venv/bin/activate
+export $(grep -v '^#' /opt/sarc_drone_backend/.env | xargs)
 uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 
@@ -53,7 +59,8 @@ Esperado:
 
 - `status=ok`
 - `database=sarc_drone`
-- `mqtt_ready=false` mientras Mosquitto no este disponible
+- `schema=sarc_drone`
+- `mqtt_ready=true` cuando Mosquitto y credenciales ya estan bien
 
 ## 6) Abrir la consola remota
 
@@ -61,14 +68,21 @@ Esperado:
 http://192.168.1.134:8000/console
 ```
 
-Desde ahi puedes ver eventos y preparar la consola; para enviar comandos remotos hace falta que Mosquitto ya este instalado.
+Desde ahi puedes ver eventos, enviar comandos y validar el flujo completo si Mosquitto ya esta operativo.
 
-## 7) Cuando instales Mosquitto
+## 7) Verificar MQTT y base de datos
 
-1. Configura usuario y password.
-2. Ajusta `MQTT_HOST=192.168.1.134` en `.env`.
-3. Reinicia el backend.
-4. Verifica que `mqtt_ready=true`.
+Suscribirse a comandos del dron:
+
+```bash
+mosquitto_sub -h 127.0.0.1 -p 1883 -u drone_client -P TU_PASSWORD -t 'sarc/commands/drone/#' -C 1 -v
+```
+
+Consultar ultimos comandos persistidos:
+
+```bash
+sudo -u postgres psql -d sarc_drone -c "SELECT command_id, command_type, drone_id, status, created_at FROM sarc_drone.commands ORDER BY created_at DESC LIMIT 10;"
+```
 
 ## 8) Probar comandos
 
@@ -76,4 +90,11 @@ Desde ahi puedes ver eventos y preparar la consola; para enviar comandos remotos
 curl -X POST "http://192.168.1.134:8000/follow/sarc_drone_001?enabled=true"
 curl -X POST http://192.168.1.134:8000/command/sarc_drone_001 -H 'Content-Type: application/json' -d '{"id":"cmd-1","type":"REQUEST_TELEMETRY"}'
 curl -X POST http://192.168.1.134:8000/command/sarc_drone_001 -H 'Content-Type: application/json' -d '{"id":"cmd-2","type":"ABORT_MISSION"}'
+```
+
+## 9) Ejecutar smoke test completo
+
+```bash
+chmod +x /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/smoke_test_vmware.sh
+DRONE_MQTT_PASSWORD=TU_PASSWORD_DRONE /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/smoke_test_vmware.sh
 ```

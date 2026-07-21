@@ -136,9 +136,9 @@ ACL esperado:
 ## 5) Levantar el backend con Python directo
 
 ```bash
-cd /ruta/a/SARC-Drone/04_docs/vmware_debian/backend
-python3 -m venv .venv
-source .venv/bin/activate
+cd /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/backend
+source /opt/sarc_drone_backend/venv/bin/activate
+export $(grep -v '^#' /opt/sarc_drone_backend/.env | xargs)
 pip install -r requirements.txt
 uvicorn app:app --host 0.0.0.0 --port 8000
 ```
@@ -383,7 +383,7 @@ Para la descripcion completa de la pila, payloads, tablas y troubleshooting, est
 
 ### No se guardan eventos en PostgreSQL
 
-- Verifica que `POSTGRES_DB=sarc_drone` y `POSTGRES_SCHEMA=sarc_drone`.
+- Verifica que `PGDATABASE=sarc_drone` y `PGSCHEMA=sarc_drone`.
 - Revisa la salida del backend o `journalctl` si lo ejecutas como servicio.
 - Comprueba que llegue `drone_id` en el payload.
 

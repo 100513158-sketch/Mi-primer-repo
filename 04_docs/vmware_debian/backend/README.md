@@ -146,18 +146,18 @@ Uso operativo de la consola:
 Ejemplo de arranque local dentro de la VM con Python directo:
 
 ```bash
-cd /ruta/a/SARC-Drone/04_docs/vmware_debian/backend
-python -m venv .venv
-.venv/Scripts/activate
+cd /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/backend
+source /opt/sarc_drone_backend/venv/bin/activate
+export $(grep -v '^#' /opt/sarc_drone_backend/.env | xargs)
 pip install -r requirements.txt
 uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 
 Nota:
 
-- PostgreSQL ya puede estar instalado en la VM y apuntar a `192.168.1.134`.
-- Si Mosquitto aun no existe, el backend ahora arranca igual y la salud mostrara `mqtt_ready=false` hasta que el broker este disponible.
-- Cuando instales Mosquitto en la VM, usa `MQTT_HOST=192.168.1.134`.
+- El backend consume variables `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`, `PGSCHEMA`.
+- En la instalacion validada, PostgreSQL y Mosquitto viven en la misma VM y se usan como `127.0.0.1`.
+- El archivo de entorno operativo queda en `/opt/sarc_drone_backend/.env`.
 
 ## Consola web
 
