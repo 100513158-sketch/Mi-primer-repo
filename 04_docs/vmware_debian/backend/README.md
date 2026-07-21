@@ -175,3 +175,9 @@ Uso típico:
 2. Escribir el `drone_id`.
 3. Pulsar `Follow ON` o cualquier otro comando.
 4. Confirmar que aparece el `ACK` en MQTT y en PostgreSQL.
+
+Scripts operativos relacionados:
+
+- `../smoke_test_vmware.sh`: valida health, MQTT y persistencia de comandos.
+- `../ack_test_vmware.sh`: fuerza un ACK de prueba y confirma la transicion `SENT -> ACK`.
+- `../redeploy_backend_vmware.sh`: resincroniza `04_docs/vmware_debian` hacia `/opt` y reinicia `sarc-backend`.

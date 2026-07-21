@@ -98,3 +98,19 @@ curl -X POST http://192.168.1.134:8000/command/sarc_drone_001 -H 'Content-Type: 
 chmod +x /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/smoke_test_vmware.sh
 DRONE_MQTT_PASSWORD=TU_PASSWORD_DRONE /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/smoke_test_vmware.sh
 ```
+
+## 10) Validar ACK del dron o simulador
+
+```bash
+chmod +x /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/ack_test_vmware.sh
+DRONE_MQTT_PASSWORD=TU_PASSWORD_DRONE /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/ack_test_vmware.sh
+```
+
+## 11) Redeploy rapido hacia /opt
+
+Si actualizas `04_docs/vmware_debian` desde una carpeta compartida o un snapshot del repo:
+
+```bash
+chmod +x /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/redeploy_backend_vmware.sh
+SOURCE_VMWARE_DIR=/mnt/hgfs/SARC-Drone/04_docs/vmware_debian /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/redeploy_backend_vmware.sh
+```

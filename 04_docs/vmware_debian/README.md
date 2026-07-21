@@ -367,6 +367,12 @@ Para el flujo paso a paso y las pruebas exactas, usa [QUICKSTART.md](QUICKSTART.
 
 Para la descripcion completa de la pila, payloads, tablas y troubleshooting, este README es la referencia principal.
 
+Scripts operativos disponibles:
+
+- `smoke_test_vmware.sh`: valida health, MQTT y persistencia de comandos.
+- `ack_test_vmware.sh`: fuerza un ACK de prueba y confirma la transicion `SENT -> ACK`.
+- `redeploy_backend_vmware.sh`: resincroniza `04_docs/vmware_debian` hacia `/opt` y reinicia `sarc-backend`.
+
 ## 12) Troubleshooting rapido
 
 ### La consola web no carga

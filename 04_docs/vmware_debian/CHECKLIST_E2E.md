@@ -146,6 +146,26 @@ chmod +x /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/smoke_test_vmw
 DRONE_MQTT_PASSWORD=TU_PASSWORD_DRONE /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/smoke_test_vmware.sh
 ```
 
+## 11) Validacion de ACK
+
+```bash
+chmod +x /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/ack_test_vmware.sh
+DRONE_MQTT_PASSWORD=TU_PASSWORD_DRONE /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/ack_test_vmware.sh
+```
+
+Criterio:
+- El comando pasa de `SENT` a `ACK`.
+- Se inserta un evento `ack` en `sarc_drone.events`.
+
+## 12) Redeploy rapido
+
+```bash
+chmod +x /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/redeploy_backend_vmware.sh
+SOURCE_VMWARE_DIR=/mnt/hgfs/SARC-Drone/04_docs/vmware_debian /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/redeploy_backend_vmware.sh
+```
+
+Usa otra ruta en `SOURCE_VMWARE_DIR` si copiaste el arbol desde Windows a otro directorio temporal de la VM.
+
 ## Pendiente operativo
 
 Solo queda validar ACK real desde el dron o simulador publicando en `sarc/drone/ack`.
