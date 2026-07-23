@@ -42,6 +42,7 @@ Filosofia de intercambio de datos:
 ├── README.md
 ├── QUICKSTART.md
 ├── CHECKLIST_E2E.md
+├── e2e_suite_vmware.sh
 ├── backend/
 │   ├── app.py
 │   └── requirements.txt
@@ -214,6 +215,19 @@ Probar aborto de mision:
 curl -X POST http://192.168.1.134:8000/command/sarc_drone_001 \
   -H 'Content-Type: application/json' \
   -d '{"id":"cmd-2","type":"ABORT_MISSION"}'
+```
+
+Suite E2E en un solo comando (smoke + ACK + telemetria opcional):
+
+```bash
+chmod +x /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/e2e_suite_vmware.sh
+DRONE_MQTT_PASSWORD=TU_PASSWORD_DRONE /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/e2e_suite_vmware.sh
+```
+
+Para exigir tambien telemetria en vivo desde Android:
+
+```bash
+LIVE_TELEMETRY_CHECK=1 DRONE_MQTT_PASSWORD=TU_PASSWORD_DRONE /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/e2e_suite_vmware.sh
 ```
 
 ## 7) Topics MQTT usados

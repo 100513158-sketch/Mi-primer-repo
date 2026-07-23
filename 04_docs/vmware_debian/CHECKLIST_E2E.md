@@ -166,6 +166,19 @@ SOURCE_VMWARE_DIR=/mnt/hgfs/SARC-Drone/04_docs/vmware_debian /opt/sarc_drone_bac
 
 Usa otra ruta en `SOURCE_VMWARE_DIR` si copiaste el arbol desde Windows a otro directorio temporal de la VM.
 
+## 13) Suite E2E completa en un comando
+
+```bash
+chmod +x /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/e2e_suite_vmware.sh
+DRONE_MQTT_PASSWORD=TU_PASSWORD_DRONE /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/e2e_suite_vmware.sh
+```
+
+Para incluir comprobacion de telemetria en vivo desde Android:
+
+```bash
+LIVE_TELEMETRY_CHECK=1 DRONE_MQTT_PASSWORD=TU_PASSWORD_DRONE /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/e2e_suite_vmware.sh
+```
+
 ## Pendiente operativo
 
 Solo queda validar ACK real desde el dron o simulador publicando en `sarc/drone/ack`.

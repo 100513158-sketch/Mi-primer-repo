@@ -177,9 +177,17 @@ class VisionActivity : AppCompatActivity() {
         try {
             val modelBuffer = loadModelFile(Config.MODEL_FILENAME)
             val options = Interpreter.Options().apply {
-                gpuDelegate = GpuDelegate()
-                addDelegate(gpuDelegate)
                 setNumThreads(4)
+                // Some devices or packaging combinations may fail loading GPU classes at runtime.
+                // Fallback to CPU instead of crashing the app.
+                try {
+                    gpuDelegate = GpuDelegate()
+                    addDelegate(gpuDelegate)
+                    Log.d(TAG, "GPU delegate enabled")
+                } catch (t: Throwable) {
+                    gpuDelegate = null
+                    Log.w(TAG, "GPU delegate unavailable, using CPU", t)
+                }
             }
             tfliteInterpreter = Interpreter(modelBuffer, options)
             labels = FileUtil.loadLabels(this, LABELS_FILENAME)

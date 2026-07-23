@@ -20,7 +20,7 @@ object Config {
     const val LOCAL_UDP_PORT = 14551
     const val DRONE_IP = "192.168.1.1"
 
-    const val MQTT_BROKER = "192.168.1.134"
+    const val MQTT_BROKER = "192.168.1.136"
     const val MQTT_PORT = 1883
     const val MQTT_TLS = false
     const val MQTT_USERNAME = "drone_client"

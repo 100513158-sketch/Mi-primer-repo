@@ -114,3 +114,16 @@ Si actualizas `04_docs/vmware_debian` desde una carpeta compartida o un snapshot
 chmod +x /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/redeploy_backend_vmware.sh
 SOURCE_VMWARE_DIR=/mnt/hgfs/SARC-Drone/04_docs/vmware_debian /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/redeploy_backend_vmware.sh
 ```
+
+## 12) Ejecutar suite E2E completa en un comando
+
+```bash
+chmod +x /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/e2e_suite_vmware.sh
+DRONE_MQTT_PASSWORD=TU_PASSWORD_DRONE /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/e2e_suite_vmware.sh
+```
+
+Si quieres exigir tambien telemetria en vivo desde la app Android:
+
+```bash
+LIVE_TELEMETRY_CHECK=1 DRONE_MQTT_PASSWORD=TU_PASSWORD_DRONE /opt/sarc_drone_backend/sarc_drone/04_docs/vmware_debian/e2e_suite_vmware.sh
+```
