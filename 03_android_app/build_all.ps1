@@ -36,14 +36,27 @@ if ($selectedModel) {
 if ($Release) {
     Write-Host "Compilando version RELEASE..." -ForegroundColor Yellow
     .\gradlew assembleRelease
-    $apkPath = "app\build\outputs\apk\release\app-release.apk"
+    $candidateApks = @(
+        "app\build\outputs\apk\release\app-release.apk",
+        "app\build\outputs\apk\release\app-release-unsigned.apk"
+    )
 } else {
     Write-Host "Compilando version DEBUG..." -ForegroundColor Yellow
     .\gradlew assembleDebug
-    $apkPath = "app\build\outputs\apk\debug\app-debug.apk"
+    $candidateApks = @(
+        "app\build\outputs\apk\debug\app-debug.apk"
+    )
 }
 
-if (Test-Path $apkPath) {
+$apkPath = $null
+foreach ($candidate in $candidateApks) {
+    if (Test-Path $candidate) {
+        $apkPath = $candidate
+        break
+    }
+}
+
+if ($apkPath) {
     Write-Host "APK generada exitosamente: $apkPath" -ForegroundColor Green
     Write-Host "Tamano: $([math]::Round((Get-Item $apkPath).Length / 1MB, 2)) MB" -ForegroundColor Green
 } else {

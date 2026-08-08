@@ -16,6 +16,8 @@ Estado del documento: actualizado al 2026-06-27.
 
 ## Fase 0: Estructura y configuracion
 
+> Documentación complementaria general: [04_docs/descripcion_general_proyecto.md](04_docs/descripcion_general_proyecto.md)
+
 ### 0.1 Estructura final
 
 ```text

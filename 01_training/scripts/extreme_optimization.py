@@ -3,6 +3,7 @@ extreme_optimization.py - Optimizacion para despliegue movil.
 """
 
 from pathlib import Path
+import shutil
 import numpy as np
 from ultralytics import YOLO
 import onnxruntime as ort
@@ -32,6 +33,16 @@ def resolve_detection_weights() -> Path | None:
     return None
 
 
+def resolve_calibration_data(model_path: Path) -> Path:
+    stem = model_path.stem
+    if stem.startswith("best_"):
+        dataset_name = stem.replace("best_", "", 1)
+        dataset_yaml = path_from_config(CFG, "datasets_processed") / dataset_name / "data.yaml"
+        if dataset_yaml.exists():
+            return dataset_yaml
+    return DATASET_CONFIG
+
+
 def quantize_to_int8_onnx(onnx_model_path: Path):
     quantized_path = onnx_model_path.with_suffix("").with_suffix(".quantized.onnx")
     quantize_dynamic(
@@ -55,11 +66,14 @@ def create_optimized_tflite(model_path: Path, output_path: Path, int8=True):
     }
     if int8:
         args["int8"] = True
-        args["data"] = str(DATASET_CONFIG)
+        calibration_data = resolve_calibration_data(model_path)
+        if calibration_data.exists():
+            args["data"] = str(calibration_data)
+        else:
+            args["data"] = str(DATASET_CONFIG)
 
     model.export(**args)
 
-    import shutil
     for f in Path(".").glob("*.tflite"):
         output_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(str(f), str(output_path))

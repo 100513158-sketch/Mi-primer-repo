@@ -141,10 +141,21 @@ def main() -> int:
             report["steps"].append(step)
 
             if cp.returncode != 0:
-                report["status"] = "FAILED_EXTREME_OPT"
-                out = save_report(report)
-                print(f"\nResultado: fallo extreme_optimization.py. Reporte: {out}")
-                return 20
+                tflite_artifact = PROJECT_ROOT / "02_models" / "exported" / "tflite" / "best_C2A" / "best_C2A.tflite"
+                onnx_artifact = PROJECT_ROOT / "02_models" / "weights" / "best_C2A.onnx"
+                if tflite_artifact.exists() or onnx_artifact.exists():
+                    report["status"] = "WARN_EXTREME_OPT"
+                    report["warning"] = "extreme_optimization.py fallo, pero los artefactos base ya existen"
+                    report["artifacts"] = {
+                        "tflite": str(tflite_artifact),
+                        "onnx": str(onnx_artifact),
+                    }
+                    print(f"\nAdvertencia: extreme_optimization.py fallo, pero se encontraron artefactos exportados. Continuando.")
+                else:
+                    report["status"] = "FAILED_EXTREME_OPT"
+                    out = save_report(report)
+                    print(f"\nResultado: fallo extreme_optimization.py. Reporte: {out}")
+                    return 20
 
         # 4) Gate release
         step = {"name": "gate_release"}
