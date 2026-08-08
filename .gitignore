@@ -8,14 +8,43 @@ sar_env/
 __pycache__/
 *.py[cod]
 
-# Datasets (local only)
-00_datasets/
+# Datasets: keep metadata/configs/labels, ignore media and large binaries
+00_datasets/**/*.jpg
+00_datasets/**/*.jpeg
+00_datasets/**/*.png
+00_datasets/**/*.bmp
+00_datasets/**/*.gif
+00_datasets/**/*.tif
+00_datasets/**/*.tiff
+00_datasets/**/*.webp
+00_datasets/**/*.mp4
+00_datasets/**/*.mov
+00_datasets/**/*.zip
+00_datasets/**/*.tar
+00_datasets/**/*.gz
+00_datasets/**/*.pt
+00_datasets/**/*.pth
+00_datasets/**/*.onnx
+00_datasets/**/*.bin
+00_datasets/**/*.npy
 
 # Training artifacts
 01_training/runs/
 01_training/scripts/runs/
-02_models/weights/
-02_models/exported/
+
+# Models: keep metrics/results metadata, ignore heavy binaries
+02_models/weights/**/*.pt
+02_models/weights/**/*.pth
+02_models/weights/**/*.onnx
+02_models/weights/**/*.bin
+02_models/exported/**/*.pt
+02_models/exported/**/*.pth
+02_models/exported/**/*.onnx
+02_models/exported/**/*.tflite
+02_models/exported/**/*.bin
+02_models/exported/**/*.xml
+02_models/exported/**/*.zip
+02_models/exported/**/*.gz
 yolo26n.pt
 
 # Android build artifacts
