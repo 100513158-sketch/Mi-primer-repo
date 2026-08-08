@@ -22,6 +22,7 @@ yolo26n.pt
 03_android_app/build/
 03_android_app/SARCApp/.gradle/
 03_android_app/SARCApp/app/build/
+03_android_app/SARCApp/local.properties
 
 # Logs and temp
 *.log
