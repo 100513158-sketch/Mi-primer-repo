@@ -1,0 +1,14 @@
+{
+  "dataset": "C:\\SARC-Drone\\00_datasets\\processed\\Dataset_Master",
+  "passed": true,
+  "stats": {
+    "images": 43130,
+    "labels": 43130,
+    "empty_labels": 0,
+    "boxes": 1086260,
+    "small_boxes": 1072299,
+    "small_box_ratio": 0.98714764421041
+  },
+  "warnings": [],
+  "errors": []
+}

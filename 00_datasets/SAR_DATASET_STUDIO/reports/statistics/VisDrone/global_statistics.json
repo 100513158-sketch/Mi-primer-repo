@@ -1,0 +1,53 @@
+{
+  "dataset": "VisDrone2019-DET",
+  "splits": {
+    "train": {
+      "images": 6471,
+      "annotations": 344736
+    },
+    "val": {
+      "images": 548,
+      "annotations": 38791
+    },
+    "test_dev": {
+      "images": 1610,
+      "annotations": 75367
+    }
+  },
+  "global": {
+    "images": 8629,
+    "annotations": 458894,
+    "classes": {
+      "van": 187004,
+      "bicycle": 38560,
+      "truck": 32702,
+      "tricycle": 16284,
+      "others": 40378,
+      "car": 13069,
+      "awning-tricycle": 6387,
+      "bus": 4377,
+      "people": 109187,
+      "class_11": 1829,
+      "motor": 9117
+    },
+    "bbox_size_categories": {
+      "small": 130640,
+      "tiny": 317110,
+      "medium": 10845,
+      "large": 299
+    },
+    "truncation": {
+      "0": 440672,
+      "1": 18222
+    },
+    "occlusion": {
+      "1": 187728,
+      "0": 227258,
+      "2": 43908
+    },
+    "very_small_boxes": 13971,
+    "small_dimension_boxes": 69871,
+    "invalid_boxes": 0,
+    "out_of_image_boxes": 0
+  }
+}

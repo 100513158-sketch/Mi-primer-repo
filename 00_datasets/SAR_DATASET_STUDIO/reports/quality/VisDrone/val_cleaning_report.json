@@ -1,0 +1,15 @@
+{
+  "dataset": "VisDrone2019-DET",
+  "split": "val",
+  "source": "C:\\SARC-Drone\\00_datasets\\SAR_DATASET_STUDIO\\raw\\VisDrone\\original\\val\\VisDrone2019-DET-val",
+  "destination": "C:\\SARC-Drone\\00_datasets\\SAR_DATASET_STUDIO\\processed\\cleaned\\VisDrone\\val",
+  "statistics": {
+    "images": 548,
+    "annotations": 40169,
+    "kept": 38791,
+    "ignored": 1378,
+    "quarantine": 0,
+    "empty_clean_annotations": 0
+  },
+  "manifest": "C:\\SARC-Drone\\00_datasets\\SAR_DATASET_STUDIO\\registry\\manifests\\visdrone_val_cleaning.jsonl"
+}

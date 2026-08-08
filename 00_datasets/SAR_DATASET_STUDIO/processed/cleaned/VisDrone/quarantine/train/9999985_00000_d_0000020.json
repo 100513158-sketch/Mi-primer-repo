@@ -1,0 +1,23 @@
+{
+  "dataset": "VisDrone2019-DET",
+  "split": "train",
+  "image": "C:\\SARC-Drone\\00_datasets\\SAR_DATASET_STUDIO\\raw\\VisDrone\\original\\train\\VisDrone2019-DET-train\\images\\9999985_00000_d_0000020.jpg",
+  "annotation": "C:\\SARC-Drone\\00_datasets\\SAR_DATASET_STUDIO\\raw\\VisDrone\\original\\train\\VisDrone2019-DET-train\\annotations\\9999985_00000_d_0000020.txt",
+  "objects": [
+    {
+      "status": "QUARANTINE",
+      "reason": "height<=0",
+      "line": 12,
+      "x": 611,
+      "y": 158,
+      "width": 4,
+      "height": 0,
+      "score": 1,
+      "class_id": 4,
+      "class_name": "car",
+      "truncation": 0,
+      "occlusion": 0,
+      "raw": "611,158,4,0,1,4,0,0"
+    }
+  ]
+}

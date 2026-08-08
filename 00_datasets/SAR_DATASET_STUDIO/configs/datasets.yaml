@@ -1,0 +1,131 @@
+datasets:
+
+  visdrone_det:
+
+    name: "VisDrone2019-DET"
+
+    description: >
+      Dataset científico de imágenes capturadas mediante drones
+      para detección de objetos aéreos.
+
+    task: "object_detection"
+
+    domain:
+      - "aerial"
+      - "drone"
+
+    source:
+
+      organization: "VisDrone"
+
+      repository: "VisDrone-Dataset"
+
+      repository_url: "https://github.com/VisDrone/VisDrone-Dataset"
+
+      official: true
+
+      source_type: "scientific_project"
+
+      institution:
+        name: "Tianjin University"
+        laboratory: "Lab of Machine Learning and Data Mining"
+
+      publication:
+        title: "Detection and tracking meet drones challenge"
+        journal: "IEEE Transactions on Pattern Analysis and Machine Intelligence"
+        year: 2021
+
+    format:
+
+      type: "visdrone"
+
+      annotation_format: "visdrone_det"
+
+      task: "bounding_box_detection"
+
+    downloads:
+
+      train:
+        filename: "VisDrone2019-DET-train.zip"
+        google_drive_id: "1a2oHjcEcwXP8oUF95qiwrqzACb2YlUhn"
+        enabled: true
+
+      val:
+        filename: "VisDrone2019-DET-val.zip"
+        google_drive_id: "1bxK5zgLn0_L8x276eKkuYA_FzwCIjb59"
+        enabled: true
+
+      test_dev:
+        filename: "VisDrone2019-DET-test-dev.zip"
+        google_drive_id: "1PFdW_VFSCfZ_sTSZAGjQdifF_Xd5mf0V"
+        enabled: true
+
+      test_challenge:
+        enabled: false
+
+    splits:
+
+      train:
+        enabled: true
+        official: true
+
+      val:
+        enabled: true
+        official: true
+
+      test_dev:
+        enabled: true
+        official: true
+        ground_truth_available: true
+
+      test_challenge:
+        enabled: false
+        official: true
+        ground_truth_available: false
+
+    destination:
+
+      raw: "raw/VisDrone"
+
+      processed: "processed/VisDrone"
+
+    expected:
+
+      total_images: 8629
+
+      train_images: 6471
+
+      val_images: 548
+
+      test_dev_images: 1610
+
+      classes: 10
+
+    classes:
+
+      0: "pedestrian"
+      1: "people"
+      2: "bicycle"
+      3: "car"
+      4: "van"
+      5: "truck"
+      6: "tricycle"
+      7: "awning-tricycle"
+      8: "bus"
+      9: "motor"
+
+    integrity:
+
+      verify_checksum: true
+
+      validate_images: true
+
+      validate_annotations: true
+
+      validate_structure: true
+
+      detect_duplicates: true
+
+      detect_near_duplicates: true
+
+    enabled: true

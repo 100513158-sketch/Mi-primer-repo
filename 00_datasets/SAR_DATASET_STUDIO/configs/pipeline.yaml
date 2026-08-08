@@ -1,0 +1,36 @@
+# ============================================================
+# SAR DATASET STUDIO
+# Pipeline de procesamiento
+# ============================================================
+
+pipeline:
+
+  preserve_raw: true
+
+  validate_source: true
+
+  verify_checksum: true
+
+  validate_structure: true
+
+  validate_images: true
+
+  validate_annotations: true
+
+  detect_duplicates: true
+
+  detect_near_duplicates: true
+
+  normalize_annotations: true
+
+  unify_classes: true
+
+  generate_statistics: true
+
+  generate_reports: true
+
+  generate_preview_images: true
+
+  allow_modification_of_raw: false
+
+  create_manifest: true

@@ -1,0 +1,15 @@
+{
+  "dataset": "VisDrone2019-DET",
+  "split": "train",
+  "source": "C:\\SARC-Drone\\00_datasets\\SAR_DATASET_STUDIO\\raw\\VisDrone\\original\\train\\VisDrone2019-DET-train",
+  "destination": "C:\\SARC-Drone\\00_datasets\\SAR_DATASET_STUDIO\\processed\\cleaned\\VisDrone\\train",
+  "statistics": {
+    "images": 6471,
+    "annotations": 353550,
+    "kept": 344736,
+    "ignored": 8813,
+    "quarantine": 1,
+    "empty_clean_annotations": 0
+  },
+  "manifest": "C:\\SARC-Drone\\00_datasets\\SAR_DATASET_STUDIO\\registry\\manifests\\visdrone_train_cleaning.jsonl"
+}

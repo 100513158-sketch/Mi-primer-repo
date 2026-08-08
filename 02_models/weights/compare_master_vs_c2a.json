@@ -1,0 +1,16 @@
+{
+  "new_master": {
+    "model_path": "C:/SARC-Drone/02_models/weights/best_Dataset_Master.pt",
+    "precision": 0.8401768204842947,
+    "recall": 0.6677498583814347,
+    "map50": 0.7129230654160071,
+    "map50_95": 0.4706801231852194
+  },
+  "prev_c2a": {
+    "model_path": "C:/SARC-Drone/02_models/weights/best_C2A.pt",
+    "precision": 0.6466689636625726,
+    "recall": 0.47343600535680125,
+    "map50": 0.47453238097213435,
+    "map50_95": 0.26430286429164396
+  }
+}

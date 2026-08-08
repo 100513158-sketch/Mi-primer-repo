@@ -1,0 +1,147 @@
+{
+  "mode": "FULL",
+  "seed": 42,
+  "balance_multiplier": 1.0,
+  "priority_keep_ratio": 0.7,
+  "datasets": [
+    "VisDrone",
+    "SeaDronesSee",
+    "NOMAD",
+    "OKUTAMA",
+    "RESDataset",
+    "NITC",
+    "C2A"
+  ],
+  "records_before": 43130,
+  "records_after": 43130,
+  "small_person_threshold_area": 0.01,
+  "small_person_ratio_after": 0.8911894273127753,
+  "by_dataset_split": [
+    {
+      "dataset": "VisDrone",
+      "split": "train",
+      "before": 5714,
+      "after": 5714
+    },
+    {
+      "dataset": "VisDrone",
+      "split": "val",
+      "before": 526,
+      "after": 526
+    },
+    {
+      "dataset": "VisDrone",
+      "split": "test",
+      "before": 1253,
+      "after": 1253
+    },
+    {
+      "dataset": "SeaDronesSee",
+      "split": "train",
+      "before": 6898,
+      "after": 6898
+    },
+    {
+      "dataset": "SeaDronesSee",
+      "split": "val",
+      "before": 1286,
+      "after": 1286
+    },
+    {
+      "dataset": "SeaDronesSee",
+      "split": "test",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "dataset": "NOMAD",
+      "split": "train",
+      "before": 5994,
+      "after": 5994
+    },
+    {
+      "dataset": "NOMAD",
+      "split": "val",
+      "before": 771,
+      "after": 771
+    },
+    {
+      "dataset": "NOMAD",
+      "split": "test",
+      "before": 748,
+      "after": 748
+    },
+    {
+      "dataset": "OKUTAMA",
+      "split": "train",
+      "before": 2302,
+      "after": 2302
+    },
+    {
+      "dataset": "OKUTAMA",
+      "split": "val",
+      "before": 98,
+      "after": 98
+    },
+    {
+      "dataset": "OKUTAMA",
+      "split": "test",
+      "before": 603,
+      "after": 603
+    },
+    {
+      "dataset": "RESDataset",
+      "split": "train",
+      "before": 3453,
+      "after": 3453
+    },
+    {
+      "dataset": "RESDataset",
+      "split": "val",
+      "before": 472,
+      "after": 472
+    },
+    {
+      "dataset": "RESDataset",
+      "split": "test",
+      "before": 467,
+      "after": 467
+    },
+    {
+      "dataset": "NITC",
+      "split": "train",
+      "before": 1556,
+      "after": 1556
+    },
+    {
+      "dataset": "NITC",
+      "split": "val",
+      "before": 367,
+      "after": 367
+    },
+    {
+      "dataset": "NITC",
+      "split": "test",
+      "before": 407,
+      "after": 407
+    },
+    {
+      "dataset": "C2A",
+      "split": "train",
+      "before": 6129,
+      "after": 6129
+    },
+    {
+      "dataset": "C2A",
+      "split": "val",
+      "before": 2043,
+      "after": 2043
+    },
+    {
+      "dataset": "C2A",
+      "split": "test",
+      "before": 2043,
+      "after": 2043
+    }
+  ]
+}

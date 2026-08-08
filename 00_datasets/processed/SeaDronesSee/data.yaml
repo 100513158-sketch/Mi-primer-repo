@@ -1,0 +1,11 @@
+path: C:/SARC-Drone/00_datasets/processed/SeaDronesSee
+train: train/images
+val:   val/images
+test:  test/images
+nc: 5
+names:
+  0: swimmer
+  1: boat
+  2: jetski
+  3: life_saving_appliances
+  4: buoy
