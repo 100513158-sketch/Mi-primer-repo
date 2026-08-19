@@ -1,0 +1,9 @@
+path: C:/SARC-Drone/00_datasets/SAR_DATASET_STUDIO/processed/sar/VisDrone_SAR_2CLASS
+
+train: train/images
+val: val/images
+test: test_dev/images
+
+names:
+  0: person
+  1: vehicle

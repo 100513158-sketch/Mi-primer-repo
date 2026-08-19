@@ -9,6 +9,11 @@ __pycache__/
 *.py[cod]
 
 # Datasets: keep metadata/configs/labels, ignore media and large binaries
+00_datasets/raw/
+00_datasets/processed/
+00_datasets/SAR_DATASET_STUDIO/raw/
+00_datasets/SAR_DATASET_STUDIO/processed/
+00_datasets/SAR_DATASET_STUDIO/reports/validation/
 00_datasets/**/*.jpg
 00_datasets/**/*.jpeg
 00_datasets/**/*.png
@@ -31,12 +36,16 @@ __pycache__/
 # Training artifacts
 01_training/runs/
 01_training/scripts/runs/
+01_training/experiments/
+01_training/variante_inicial/runs/
+01_training/variante_inicial/scripts/runs/
 
 # Models: keep metrics/results metadata, ignore heavy binaries
 02_models/weights/**/*.pt
 02_models/weights/**/*.pth
 02_models/weights/**/*.onnx
 02_models/weights/**/*.bin
+02_models/weights/**/*.npy
 02_models/exported/**/*.pt
 02_models/exported/**/*.pth
 02_models/exported/**/*.onnx

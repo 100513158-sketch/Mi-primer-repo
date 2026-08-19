@@ -1,12 +1,18 @@
-path: C:/SARC-Drone/00_datasets/processed
+path: C:/SARC-Drone/00/_DATASETS/SAR_DATASET_STUDIO/processed/converted/VisDrone
+
 train: train/images
 val: val/images
-test: test/images
-
-nc: 1
+test: test_dev/images
 
 names:
-  0: person
-
-kpt_shape: [17, 3]
-flip_idx: [0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15]
+  0: people
+  1: bicycle
+  2: car
+  3: van
+  4: truck
+  5: tricycle
+  6: awning-tricycle
+  7: bus
+  8: motor
+  9: others
+  10: other_vehicle
