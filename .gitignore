@@ -8,12 +8,14 @@ sar_env/
 __pycache__/
 *.py[cod]
 
-# Datasets: keep metadata/configs/labels, ignore media and large binaries
+# Datasets: keep structure and configuration, ignore media and annotations
 00_datasets/raw/
 00_datasets/processed/
 00_datasets/SAR_DATASET_STUDIO/raw/
 00_datasets/SAR_DATASET_STUDIO/processed/
 00_datasets/SAR_DATASET_STUDIO/reports/validation/
+00_datasets/**/annotations/
+00_datasets/**/labels/
 00_datasets/**/*.jpg
 00_datasets/**/*.jpeg
 00_datasets/**/*.png
