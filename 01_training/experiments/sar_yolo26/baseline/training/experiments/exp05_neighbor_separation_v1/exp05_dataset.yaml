@@ -1,0 +1,9 @@
+path: C:/SARC-Drone/00_datasets/SAR_DATASET_STUDIO/processed/sar/cleaned/VisDrone_SAR_2CLASS_V1
+
+train: C:/SARC-Drone/01_training/experiments/sar_yolo26/baseline/training/experiments/exp05_neighbor_separation_v1/train_with_dense_and_neighbor_crops.txt
+val: C:/SARC-Drone/00_datasets/SAR_DATASET_STUDIO/processed/sar/cleaned/VisDrone_SAR_2CLASS_V1/val/images
+test: C:/SARC-Drone/00_datasets/SAR_DATASET_STUDIO/processed/sar/cleaned/VisDrone_SAR_2CLASS_V1/test_dev/images
+
+names:
+  0: person
+  1: vehicle

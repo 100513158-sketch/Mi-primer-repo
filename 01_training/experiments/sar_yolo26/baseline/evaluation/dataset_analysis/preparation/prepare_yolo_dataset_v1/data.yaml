@@ -1,0 +1,13 @@
+# SAR YOLO26 - VisDrone SAR 2CLASS V1
+
+path: C:/SARC-Drone/00_datasets/SAR_DATASET_STUDIO/processed/sar/cleaned/VisDrone_SAR_2CLASS_V1
+
+train: train/images
+val: val/images
+test: test_dev/images
+
+nc: 2
+
+names:
+  0: person
+  1: vehicle

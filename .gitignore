@@ -38,9 +38,32 @@ __pycache__/
 # Training artifacts
 01_training/runs/
 01_training/scripts/runs/
-01_training/experiments/
 01_training/variante_inicial/runs/
 01_training/variante_inicial/scripts/runs/
+01_training/**/runs/
+01_training/**/checkpoints/
+01_training/**/weights/
+01_training/**/images/
+01_training/**/labels/
+01_training/**/annotations/
+01_training/**/plots/
+01_training/**/reports/
+01_training/**/*.jpg
+01_training/**/*.jpeg
+01_training/**/*.png
+01_training/**/*.bmp
+01_training/**/*.gif
+01_training/**/*.tif
+01_training/**/*.tiff
+01_training/**/*.webp
+01_training/**/*.pt
+01_training/**/*.pth
+01_training/**/*.onnx
+01_training/**/*.bin
+01_training/**/*.npy
+01_training/**/*.csv
+01_training/**/*.txt
+01_training/**/*.log
 
 # Models: keep metrics/results metadata, ignore heavy binaries
 02_models/weights/**/*.pt

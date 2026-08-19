@@ -1,0 +1,27 @@
+{
+    "total_predictions": 47135,
+    "classes": {
+        "vehicle": {
+            "predictions": 38246,
+            "mean_confidence": 0.6337950966598872,
+            "p10_confidence": 0.3015046715736389,
+            "p50_confidence": 0.6841558516025543,
+            "p90_confidence": 0.8958675861358643,
+            "mean_bbox_area": 2837.068123769983,
+            "p10_bbox_area": 267.6956048402935,
+            "p50_bbox_area": 1154.8271166931372,
+            "p90_bbox_area": 6376.55747854989
+        },
+        "person": {
+            "predictions": 8889,
+            "mean_confidence": 0.43830012843986776,
+            "p10_confidence": 0.2688369631767273,
+            "p50_confidence": 0.38574904203414917,
+            "p90_confidence": 0.703264033794403,
+            "mean_bbox_area": 1019.8249434341874,
+            "p10_bbox_area": 147.270282526128,
+            "p50_bbox_area": 414.6498384475708,
+            "p90_bbox_area": 2284.6625041581688
+        }
+    }
+}
