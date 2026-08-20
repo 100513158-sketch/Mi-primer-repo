@@ -1,13 +1,14 @@
 ﻿# SARC-Drone: Sistema Autonomo de Rescate con Vision por Computadora
 
 Guia completa de implementacion con configuracion centralizada en config.yaml.
-Estado del documento: actualizado al 2026-06-27.
+Estado del documento: actualizado al 2026-08-20.
 
 ## Indice
 
 - Fase 0: Estructura de directorios y configuracion
 - Fase 1: Preparacion de datasets
 - Fase 2: Entrenamiento curricular con pipeline secuencial (NUEVO)
+- Linea experimental actual: SAR YOLO26 baseline y mejora de recall
 - Fase 3: Optimizacion y exportacion
 - Fase 4: Aplicacion Android
 - Fase 5: Integracion IoT, nube y control remoto
@@ -336,6 +337,58 @@ Salidas de train.py (uso manual):
 
 - `02_models/weights/best_detection.pt`
 - `02_models/weights/best_pose.pt`
+
+## Linea experimental actual: SAR YOLO26 baseline
+
+El trabajo activo se encuentra en:
+
+`01_training/experiments/sar_yolo26/baseline/`
+
+Esta linea experimental parte de un baseline de deteccion de personas y
+estudia los fallos de recall en personas muy pequenas, especialmente en
+escenas densas, con vecinos cercanos y cerca de los bordes de la imagen. Las
+evaluaciones usan `test_dev` con un protocolo constante para poder comparar
+las intervenciones.
+
+### Estado de los experimentos
+
+- `EXP01`: baseline de recall de personas pequenas.
+- `EXP02`: oversampling dirigido de personas pequenas.
+- `EXP03`: evaluacion con mayor resolucion de entrada.
+- `EXP04`: crops dirigidos para escenas densas.
+- `EXP05`: separacion de vecinos cercanos.
+- `EXP06`: crops dirigidos para personas pequenas cerca de bordes.
+- `EXP07`: poblacion combinada de personas extremadamente pequenas, escenas
+  densas y vecinos cercanos.
+
+Los analisis de EXP04 y EXP07 incluyen comparaciones de factores, transiciones
+`FN -> TP` y `TP -> FN`, interacciones entre poblaciones y recall por tamano.
+Los scripts y reportes viven dentro de:
+
+`01_training/experiments/sar_yolo26/baseline/evaluation/dataset_analysis/detection_failure_analysis/person/small_failure_patterns/`
+
+En particular:
+
+- [analyze_exp04_transition_analysis_v1.py](01_training/experiments/sar_yolo26/baseline/evaluation/dataset_analysis/detection_failure_analysis/person/small_failure_patterns/experiments/analyze_exp04_transition_analysis_v1.py)
+- [run_exp07_small_person_recall_eval_v1.py](01_training/experiments/sar_yolo26/baseline/evaluation/dataset_analysis/detection_failure_analysis/person/small_failure_patterns/experiments/run_exp07_small_person_recall_eval_v1.py)
+
+### Relacion con Go/No-Go y Android
+
+EXP07 y sus modelos son artefactos de investigacion y todavia no sustituyen al
+modelo definido por el pipeline curricular ni al candidato documentado para
+Android. El modelo final de esta linea se seleccionara despues de completar la
+evaluacion y comparar los resultados con el baseline y las demas intervenciones.
+
+Cuando exista un candidato estable, se debera:
+
+1. registrar el peso y sus metricas en el flujo Go/No-Go, de forma equivalente
+   a la validacion de la variante inicial;
+2. ejecutar el perfil de candidato y, si corresponde, el perfil de release;
+3. exportar el modelo aprobado al formato requerido por Android;
+4. actualizar la app para utilizar unicamente el modelo seleccionado.
+
+Por ahora no se han modificado `config.yaml`, `05_tests/go_nogo_gate.py`, los
+perfiles Go/No-Go ni la aplicacion Android para esta linea experimental.
 
 ## Fase 3: Exportacion
 

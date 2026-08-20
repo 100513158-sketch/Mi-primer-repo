@@ -77,6 +77,39 @@ python .\export_model.py
 
 ---
 
+## Línea experimental actual: SAR YOLO26
+
+La línea activa se ejecuta desde el baseline experimental:
+
+```powershell
+cd C:\SARC-Drone\01_training\experiments\sar_yolo26\baseline
+```
+
+El trabajo actual evalúa EXP01-EXP07 para mejorar el recall de personas
+pequeñas. EXP07 se centra en personas extremadamente pequeñas, escenas densas
+y vecinos cercanos. Sus evaluaciones y análisis están en:
+
+```text
+evaluation\dataset_analysis\detection_failure_analysis\person\small_failure_patterns\experiments
+```
+
+Ejemplos de scripts actuales:
+
+```powershell
+python .\evaluation\dataset_analysis\detection_failure_analysis\person\small_failure_patterns\experiments\analyze_exp04_transition_analysis_v1.py
+python .\evaluation\dataset_analysis\detection_failure_analysis\person\small_failure_patterns\experiments\run_exp07_small_person_recall_eval_v1.py
+```
+
+Estos scripts generan reportes de análisis y no sustituyen todavía el flujo
+oficial de entrenamiento, exportación o liberación. El modelo que resulte
+seleccionado al terminar la investigación deberá validarse posteriormente con
+el gate Go/No-Go, de forma equivalente a la variante inicial, y solo después
+podrá considerarse para integración en Android. No se deben copiar modelos de
+EXP07 a `02_models` ni a los assets de Android como parte de este estado
+intermedio.
+
+---
+
 ## Fase 5.1: Gate Go/No-Go
 
 ```powershell

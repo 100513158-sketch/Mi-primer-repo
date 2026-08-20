@@ -87,7 +87,32 @@ La carpeta [03_android_app](../03_android_app) contiene el frontend móvil del p
 
 Aunque el proyecto sigue evolucionando, esta capa es clave porque cierra el ciclo entre el desarrollo del modelo y la ejecución práctica del sistema.
 
-### 5.5 Documentación y pruebas
+### 5.5 Línea experimental SAR YOLO26
+
+La investigación activa de entrenamiento y evaluación se encuentra en
+`01_training/experiments/sar_yolo26/baseline/`. Esta línea parte de un baseline
+de detección de personas y analiza cómo mejorar el recall de personas muy
+pequeñas en imágenes aéreas.
+
+La secuencia actual de experimentos va de EXP01 a EXP07 e incluye, entre otras
+intervenciones, mayor resolución, crops de escenas densas, separación de
+vecinos cercanos y crops próximos a los bordes. EXP07 combina una población de
+personas extremadamente pequeñas, escenas densas y vecinos cercanos. Los
+resultados se comparan con un protocolo constante sobre `test_dev`.
+
+Los scripts de análisis y sus reportes están organizados dentro de
+`01_training/experiments/sar_yolo26/baseline/evaluation/dataset_analysis/detection_failure_analysis/person/small_failure_patterns/`.
+Entre los análisis actuales se encuentran la transición de detecciones de EXP04
+frente a EXP01 y la evaluación de recall de EXP07.
+
+Esta línea todavía es experimental. El modelo que finalmente se seleccione
+deberá incorporarse al flujo Go/No-Go, de forma similar a la validación de la
+variante inicial, antes de considerarlo candidato de release. Después de esa
+selección se actualizará la exportación y la app Android. Mientras tanto, no se
+debe tratar EXP07 como el modelo oficial de Android ni modificar los perfiles
+Go/No-Go existentes por estos resultados parciales.
+
+### 5.6 Documentación y pruebas
 
 - [04_docs](../04_docs): reúne guías, procesos, flujos de comando y documentación operacional.
 - [05_tests](../05_tests): contiene validaciones y reportes de verificación del pipeline y del proceso de release.
